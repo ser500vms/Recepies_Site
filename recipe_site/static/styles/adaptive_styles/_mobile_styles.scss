@@ -1,0 +1,135 @@
+//mobile css
+
+.center {
+    padding-left: calc(50% - $mobileWithSite / 2);
+    padding-right: calc(50% - $mobileWithSite / 2);
+}    
+
+.menu {
+
+    &__menu-list {
+        width: 375px;
+    }
+
+    &__sections {
+        flex-direction: row;
+        gap: 30px;
+    }
+}
+
+.header-container{
+
+    &__hide-element{
+        display: none;
+    }        
+}
+
+.about-store {  
+
+    justify-content: center;
+
+    &__img {
+        display: none;
+    }
+
+    &__description {
+        padding: 148px 56px;
+    }
+
+    &__title {
+        font-size: 38px;
+        line-height: 30px;
+    }
+
+    &__title_luxerios {
+        font-size: 20px;
+    }
+
+    &__title_fashion {
+        font-size: 20px;      
+    }
+}
+
+.offer {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 64px;
+    margin-bottom: 64px;
+}
+
+.offer-content {
+    padding: 98px 94px;        background-size: cover;
+
+    &__big {
+        padding: 30px 92px;
+    }
+}
+
+.goods {
+    gap: 65px;
+
+    &__cards {
+        grid-template-columns: repeat(1, 359px);
+        gap: 17px;
+    }
+}
+
+.feature {
+    flex-direction: column;
+    padding-top: 48px;
+    padding-bottom: 81px;
+    gap: 46px;
+
+    &__content {
+        padding: 0;
+    }
+
+    &__subtitle {
+        padding: 0 33px 0 33px;
+        width: 348px;
+    }
+}
+
+.subscribe {
+    padding-top: 54px;
+    padding-bottom: 110px;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+
+
+    &__content {
+        padding-top: 59px;
+    }
+
+    &__form-box {
+        padding-top: 27px;
+    }
+}
+
+.footer {
+    background-color: $mainBgColor;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+
+    &__copyright {
+        display: flex;
+        align-items: center;
+    }
+
+    &__subtitle {
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 19px;
+        color: #fbfbfb;
+        padding-bottom: 10px;            
+    }
+
+    &__social {
+        display: flex;
+        padding: 40px 0;
+        gap: 8px;
+    }
+}
