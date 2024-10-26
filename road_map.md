@@ -1,0 +1,60 @@
+Разработка сайта с рецептами
+
+1. Frontend (Работаю в редакторе VScode):
+    - Создал страницы html:
+        - Главная страница - index.html
+        - Страница личного кабинета - account-page.html
+        - Страница авторизации - enter-page.html
+        - Страница регистрации - registartion.html
+        - страница добваления рецепта - add-recipe.html
+        - Страница отображения отдельного рецепта - recipe.html
+    - Стилизовал страницы:
+        - Использую предпроцессор sass для стилизации. У каждой страницы, свой файл scss с стилями.
+    - Скрипты:
+        - Написал файл script.js в котором описал следующие функции:
+            - Переход на страницу с рецептом при нажатии кнопки превью рецепта - GoToRecipe()
+            - Отображения блока с фильтрами при нажатии на кнопку фильтры в строке поиска - ShowFilters()
+
+2. Backend (Работаю в редакторе pycharm):
+    - Подготовка к работе:
+        - [x] Создал проект - Recipies_Site
+        - [x] Убедился в правильной работе виртуального окружения
+        - [x] Создал репозиторий Recipies_Site на Githab
+        - [x] Добавил в папку Recipe_Site файл gitignore для исключения загрузки не нужных файлов и директорий
+        - [x] Создал файл readme.md с описанием условий выполнения проекта
+        - [x] Создал файл road_map.md в котором буду описывать этапы выполнения проекта
+        - [x] Инициализировал папку с проектом - git init
+        - [x] Добавил файлы в git - git add .
+        - [x] Сделал commit - git commit -m "Initial commit"
+        - [x] Связал проект с удаленным репозиторием:
+            - git remote add origin https://github.com/ser500vms/Recepies_Site.git
+            - git branch -M main
+            - git push -u origin main
+    - Разработка:
+        - Создание функционала регистрации, авторизации, выхода пользователя и настройка прав и области видимости у не/авторизованных пользователей
+            - Создал ветку reg-log-auth-permissions для работы над этой задачей - git branch reg-log-auth-permissions
+            - Установил Django фреймфорк - pip install django
+            - Обновил pip - 
+            - Создал django-проект recipe_site - django-admin startproject recipe_site
+            - Переименовал recipe_site/recipe_site в recipe_site/settings для удобства в работе
+            - Создал приложение usersapp для выполнения поставленной задачи - python manage.py startapp usersapp
+            - Подключил приложение в файле recipe_site/settings/settings.py - 'usersapp'
+            - Принял базовые миграции - python manage.py migrate
+            - Создал суперпользователя для работы с административной панелью - python manage.py createsuperuser
+            - Создал файл с зависимостями - pip freeze requerments.txt
+            - Создал папку для шаблонов recipe_site/usersapp/templates/userapp
+            - Перенес файл index.html из фронтенда  в папку recipe_site/usersapp/templates/userapp, переименовал его в base.html. Данный шаблон будет баззовым шаблоном для работы
+            - Перенес остальные файлы страниц из фронтенда в папку recipe_site/usersapp/templates/userapp. Далее они буду переработаны в шаблоны
+            - *Пренес папки с стилями и скриптами в папку ...*
+            - *В файле ... прописал путь к папке с статикой, а также установил путь к папке с медия(изображениями) - ....*
+            - В файле recipe_site/usersapp/view.py создал класс BaseView(TemplateView) для рендеринга базового шаблона
+            - Отредактировал файл recipe_site/usersapp/templates/userapp/base.html. Прописал новые пути к файлам стилей, скриптам, ссылкам.
+            - Создал файл recipe_site/usersapp/urls.py для подключения view классов
+            - Сделал переадресацию в файле recipe_site/settings/urls.py на файл recipe_site/usersapp/urls.py - 
+            - Подключил класс BaseView(TemplateView) в файле recipe_site/usersapp/urls.py - 
+            - Запустил сервер - python manage.py start server
+            - Проверил работу view класса BaseView(TemplateView)
+            - Добавил файлы в git - git add .
+            - Сделал commit - git commit -m "Done BaseView"
+            - Создание функционала регистрации:
+                -   
