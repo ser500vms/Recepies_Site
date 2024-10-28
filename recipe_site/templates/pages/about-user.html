@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+<body>
+    
+    {% block header %}
+
+    <header class="header">
+        <div class="header-container center">
+            <div class="header-container__left">
+                <a href="{% url 'home_page' %}" class="header-container__left__search-form__submit-button" type="button" aria-label="Искать">
+                    Домой
+                </a>
+                <form role="search" class="header-container__left__search-form">
+                    <input type="search" class="header-container__left__search-form__input-input" placeholder="Поиск по рецептам" >
+                    <button class="header-container__left__search-form__filters-button" type="button" aria-label="Открыть список фильтров">
+                        <svg width="25" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation"><path d="M12.418 20.444h8.272a.444.444 0 1 0 0-.889h-8.272A2.003 2.003 0 0 0 10.468 18c-.95 0-1.748.665-1.95 1.555H2.912a.445.445 0 1 0 0 .89h5.606c.202.889.998 1.555 1.95 1.555.95 0 1.748-.665 1.95-1.556Zm6.667-8h1.605a.445.445 0 0 0 0-.889h-1.605A2.003 2.003 0 0 0 17.135 10c-.95 0-1.749.665-1.95 1.555H2.912a.445.445 0 1 0 0 .89h12.271c.203.889.999 1.555 1.95 1.555.95 0 1.748-.665 1.95-1.556Zm-10.667-8H20.69a.445.445 0 0 0 0-.888H8.42A2.003 2.003 0 0 0 6.467 2c-.95 0-1.748.665-1.95 1.556H2.912a.444.444 0 1 0 0 .889h1.606C4.72 5.334 5.516 6 6.468 6c.95 0 1.748-.665 1.95-1.555Z" fill="#241F20"></path></svg>
+                    </button>
+                </form>
+                <button class="header-container__left__search-form__submit-button" type="submit" aria-label="Искать">
+                    <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" class="searchInput_searchSvg__sqDxD" role="presentation"><path d="M10.04 2.5a7.539 7.539 0 1 1 0 15.079 7.539 7.539 0 0 1 0-15.078ZM15.725 15.724 22 22" stroke="#241F20" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+            </div>
+            <div class="header-container__right">
+                <a href="" class="header-container__right__registration">
+                    <svg fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1"><path d="M6.33,18.45v8.59c0,.41,.34,.75,.75,.75h15.13c.41,0,.75-.34,.75-.75v-8.6c1.91-.75,3.27-2.6,3.27-4.77,0-2.83-2.3-5.13-5.13-5.13-.56,0-1.13,.1-1.67,.28-1.2-1.87-3.24-3.01-5.49-3.01s-4.09,1.02-5.31,2.75c-3.06-.27-5.56,2.14-5.56,5.11,0,2.17,1.36,4.02,3.27,4.77Zm1.5,7.84v-1.87h13.63v1.87H7.83Zm13.63-7.48v4.11H7.83v-4.11h13.63ZM8.19,10.05c.18,0,.36,.02,.56,.05,0,0,.01,0,.02,0,1.72,.33,2.97,1.83,2.97,3.57,0,.41,.34,.75,.75,.75s.75-.34,.75-.75c0-2.05-1.23-3.85-3.04-4.67,.94-1.07,2.29-1.7,3.74-1.7,1.91,0,3.64,1.07,4.5,2.79,.09,.18,.25,.31,.43,.38,.19,.06,.39,.05,.57-.04,.52-.26,1.09-.4,1.65-.4,2,0,3.63,1.63,3.63,3.63s-1.63,3.63-3.63,3.63H8.19c-2,0-3.63-1.63-3.63-3.63s1.63-3.63,3.63-3.63Z"/></svg>
+                    Добавить рецепт
+                </a> 
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %} 
+                    <button type="submit" class="header-container__right__registration">
+                        <svg fill="#000000" width="800px" height="800px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1"><path d="M6.97,30.75H25.03c.41,0,.75-.34,.75-.75V3.89c0-.41-.34-.75-.75-.75h-2.56v-1.14c0-.41-.34-.75-.75-.75s-.75,.34-.75,.75v1.14h-4.22v-1.14c0-.41-.34-.75-.75-.75s-.75,.34-.75,.75v1.14h-4.22v-1.14c0-.41-.34-.75-.75-.75s-.75,.34-.75,.75v1.14h-2.56c-.41,0-.75,.34-.75,.75V30c0,.41,.34,.75,.75,.75Zm.75-26.11h1.81v1.14c0,.41,.34,.75,.75,.75s.75-.34,.75-.75v-1.14h4.22v1.14c0,.41,.34,.75,.75,.75s.75-.34,.75-.75v-1.14h4.22v1.14c0,.41,.34,.75,.75,.75s.75-.34,.75-.75v-1.14h1.81V29.25H7.72V4.64Z"/><path d="M16.86,9.66h-6.57c-.41,0-.75,.34-.75,.75s.34,.75,.75,.75h6.57c.41,0,.75-.34,.75-.75s-.34-.75-.75-.75Z"/><path d="M16.86,16.19h-6.57c-.41,0-.75,.34-.75,.75s.34,.75,.75,.75h6.57c.41,0,.75-.34,.75-.75s-.34-.75-.75-.75Z"/><path d="M16.86,22.73h-6.57c-.41,0-.75,.34-.75,.75s.34,.75,.75,.75h6.57c.41,0,.75-.34,.75-.75s-.34-.75-.75-.75Z"/><path d="M10.28,14.27h3.61c.41,0,.75-.34,.75-.75s-.34-.75-.75-.75h-3.61c-.41,0-.75,.34-.75,.75s.34,.75,.75,.75Z"/><path d="M10.28,21h3.61c.41,0,.75-.34,.75-.75s-.34-.75-.75-.75h-3.61c-.41,0-.75,.34-.75,.75s.34,.75,.75,.75Z"/><path d="M13.89,25.79h-3.61c-.41,0-.75,.34-.75,.75s.34,.75,.75,.75h3.61c.41,0,.75-.34,.75-.75s-.34-.75-.75-.75Z"/></svg>
+                        Выйти
+                    </button>
+                </form>                        
+            </div>
+        </div>
+        <div class="header-filter-container center">
+            <div class="header-filter-container-filter">
+                <details open class="header-filter-container__country-details">
+                    <summary class="header-filter-container__country-details__summary">
+                        Выбирите кухню
+                    </summary>
+                    <div class="header-filter-container__country-details__box">
+                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="asia" name="asia"/>
+                        <label class="header-filter-container__country-details__box__label" for="asia">Азиатская кухня</label>
+                    </div>
+                    <div class="header-filter-container__country-details__box">
+                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="russia" name="russia"/>
+                        <label class="header-filter-container__country-details__box__label" for="russia">Российская кухня</label>
+                    </div>
+                    <div class="header-filter-container__country-details__box">
+                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="georg" name="georg"/>
+                        <label class="header-filter-container__country-details__box__label" for="georg">Грузинская кухня</label>
+                    </div>
+                </details>
+                <details open class="header-filter-container__country-details">
+                    <summary class="header-filter-container__country-details__summary">
+                        Выбирите кухню
+                    </summary>
+                    <div class="header-filter-container__country-details__box">
+                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="asia" name="asia"/>
+                        <label class="header-filter-container__country-details__box__label" for="asia">Азиатская кухня</label>
+                    </div>
+                    <div class="header-filter-container__country-details__box">
+                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="russia" name="russia"/>
+                        <label class="header-filter-container__country-details__box__label" for="russia">Российская кухня</label>
+                    </div>
+                    <div class="header-filter-container__country-details__box">
+                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="georg" name="georg"/>
+                        <label class="header-filter-container__country-details__box__label" for="georg">Грузинская кухня</label>
+                    </div>
+                </details>                
+            </div>
+            <button type="button" class="header-filter-container__button">
+                Применить
+            </button>
+        </div>
+    </header>
+
+    {% endblock header %}
+
+    {% block content %}
+
+    <section class="about-user center">
+        <h2 class="about-user__title">
+            Информация о пользователе
+        </h2>
+        <div class="about-user__info-box">
+            <p class="about-user__info">
+                Имя: {{ user.first_name }}
+            </p>
+            <p class="about-user__info">
+                Фамилия: {{ user.last_name }}
+            </p>
+            <p class="about-user__info">
+                Username: {{ user.username }}
+            </p>
+            <p class="about-user__info">
+                {% if user.email %}
+                    Email: {{ user.email }}
+                {% else %}
+                    Email: Отсутствует
+                {% endif %}
+            </p>
+            <p class="about-user__info">
+                Колличество опубликованных рецептов: 
+            </p>
+        </div>
+
+        <div class="about-user__links">
+            <a href="{% url 'update_user' pk=user.pk %}" class="about-user__links__change-link">Отредактировать данные</a>
+            <a href="{% url 'delete_user' pk=user.pk %}" class="about-user__links__delete-link">Удалить профиль</a>
+        </div>
+
+            
+        
+    </section>
+
+    {% endblock content %}
+
+</body>
+</html>

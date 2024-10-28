@@ -196,8 +196,7 @@
 .registration {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  gap: 130px;
+  justify-content: space-between;
   padding-top: 64px;
   padding-bottom: 96px;
   background: linear-gradient(to bottom left, #281a0f, #422f21);
@@ -206,46 +205,59 @@
   display: flex;
   flex-direction: column;
   gap: 34px;
+  padding-left: 20px;
 }
 .registration__personal-info {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 360px;
+  text-align: center;
 }
 .registration__title {
   color: white;
   font-size: 30px;
   font-weight: 500;
-  text-align: left;
+  padding-bottom: 20px;
+}
+.registration__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+.registration__form label {
+  color: white;
+  font-size: 30px;
+  font-weight: 300;
+}
+.registration__form ul {
+  color: white;
+  font-size: 15px;
+  font-weight: 300;
+}
+.registration__form p {
+  display: flex;
+  flex-direction: column;
+}
+.registration__form p .helptext {
+  margin-left: 10px;
+  color: white;
+  flex-wrap: wrap;
 }
 .registration__input {
   border: 1px solid rgb(164, 164, 164);
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 17px;
+  margin-left: 17px;
 }
 .registration__input::-moz-placeholder {
-  color: rgb(177, 177, 177);
+  color: rgb(0, 0, 0);
   font-size: 30px;
   font-weight: 300;
   text-align: left;
 }
 .registration__input::placeholder {
-  color: rgb(177, 177, 177);
+  color: rgb(0, 0, 0);
   font-size: 30px;
   font-weight: 300;
   text-align: left;
-}
-.registration__radio-buttons {
-  display: flex;
-  gap: 10px;
-  color: white;
-  font-size: 30px;
-  font-weight: 300;
-}
-.registration #female {
-  margin-left: 10px;
 }
 .registration__login-info {
   display: flex;
@@ -284,7 +296,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 652px;
+  padding-right: 20px;
   gap: 22px;
 }
 .registration__adv-title {
@@ -305,40 +317,41 @@
   padding-left: 22px;
 }
 
-.registration {
+.login-page {
   display: flex;
-  flex-direction: row;
   justify-content: center;
   gap: 130px;
   padding-top: 64px;
   padding-bottom: 96px;
   background: linear-gradient(to bottom left, #281a0f, #422f21);
 }
-.registration__data {
+.login-page__form {
   display: flex;
   flex-direction: column;
-  gap: 34px;
+  gap: 10px;
 }
-.registration__personal-info {
+.login-page__form__content {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  width: 360px;
 }
-.registration__title {
+.login-page__form__content__label {
   color: white;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: 500;
-  text-align: left;
 }
-.registration__login-info {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 360px;
+.login-page__form__content__input {
+  font-size: 25px;
+  font-weight: 500;
+  margin-left: 20px;
 }
-.registration__button {
+.login-page__form__content__small {
+  text-align: center;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+}
+.login-page__form__submit-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -357,6 +370,47 @@
   opacity: 0.67;
   background-color: rgb(225, 225, 225);
   border-radius: 20px 20px;
+}
+.login-page__form__wrong-data {
+  display: flex;
+  justify-content: center;
+}
+.login-page__form__wrong-data__subtitle {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}
+.login-page__form__reset-link {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}
+.login-page__form__reset-link a {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}
+.login-page__form__create-link {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}
+.login-page__form__create-link a {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}
+.login-page__title {
+  color: white;
+  font-size: 30px;
+  font-weight: 500;
+  text-align: center;
 }
 
 .account-view {
@@ -477,6 +531,57 @@
 
 .choose {
   display: flex;
+}
+
+.about-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 64px;
+  padding-bottom: 96px;
+  background: linear-gradient(to bottom left, #281a0f, #422f21);
+}
+.about-user__title {
+  color: white;
+  font-size: 30px;
+  font-weight: 500px;
+  padding-bottom: 20px;
+}
+.about-user__info {
+  color: white;
+  font-size: 30px;
+  font-weight: 500px;
+  text-align: left;
+  padding-bottom: 20px;
+}
+.about-user__links {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+}
+.about-user__links__change-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 25px;
+  font-weight: 700;
+  color: black;
+  opacity: 0.67;
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px 20px;
+  padding: 20px 40px;
+}
+.about-user__links__delete-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 25px;
+  font-weight: 700;
+  color: black;
+  opacity: 0.67;
+  background-color: rgb(255, 255, 255);
+  border-radius: 20px 20px;
+  padding: 20px 40px;
 }
 
 body {

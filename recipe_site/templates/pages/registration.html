@@ -7,54 +7,28 @@
         <div class="registration__data">
             <div class="registration__personal-info">
                 <h2 class="registration__title">Регистрация</h2>
-                <div>
-                    <form method="post">
-                        {% csrf_token %}
+                <form class="registration__form" method="post">
+                    {% csrf_token %}
 
-                        {{ form.as_p }}
+                    {{ form.as_p }}
 
-                        <button type="submit">Зарегистрироваться</button>
-                    </form>
-                </div>
-
+                    <button class="registration__button" type="submit">Зарегистрироваться</button>
+                </form>
             </div>
         </div>
+        <div class="registration__advertising">
+            <h2 class="registration__adv-title">Зарегистрированным пользователям доступны следующие возможности:</h2>
+             <ul class="registration__ul">
+                 <li class="registration__li">Добавлять свои рецепты на сайт
+                  </li>
+                  <li class="registration__li">Добавлять понравившиеся рецепты в избранное и всегда иметь их под рукой
+                  </li>
+                <li class="registration__li">Оставлять комментарии к рецептам пользователей
+                 </li>
+                 <li class="registration__li">Формировать список продуктов для покупки</li>
+              </ul>
+         </div>
     </section>
-
-
-
-<!--                <input type="text" placeholder="Ваше имя" class="registration__input">-->
-<!--                <input type="text" placeholder="Ваша фамилия" class="registration__input">-->
-<!--                <div class="registration__radio-buttons">-->
-<!--                    <input type="radio" id="male" name="radio" class="registration__radio">-->
-<!--                    <label for="male" class="registration__label">М</label>-->
-<!--                    <input type="radio" id="female" name="radio" class="registration__radio">-->
-<!--                    <label for="female" class="registration__label">Ж</label>-->
-<!--                </div>-->
-
-<!--            <div class="registration__login-info">-->
-<!--                <input type="text" placeholder="Username" class="registration__input">-->
-<!--                <input type="email" placeholder="Email" class="registration__input">-->
-<!--                <input type="password" placeholder="Пароль" class="registration__input">-->
-<!--                <input type="password" placeholder="Повторите пароль" class="registration__input">-->
-<!--                <p class="registration__subtitle">Длина пароль должна быть больше 8 символов и иметь заглавные буквы</p>-->
-<!--                <button class="registration__button">Зарегистрироваться-->
-<!--                </button>-->
-<!--            </div>-->
-
-<!--        <div class="registration__advertising">-->
-<!--            <h2 class="registration__adv-title">Зарегистрированным пользователям доступны следующие возможности:</h2>-->
-<!--            <ul class="registration__ul">-->
-<!--                <li class="registration__li">Добавлять свои рецепты на сайт-->
-<!--                </li>-->
-<!--                <li class="registration__li">Добавлять понравившиеся рецепты в избранное и всегда иметь их под рукой-->
-<!--                </li>-->
-<!--                <li class="registration__li">Оставлять комментарии к рецептам пользователей-->
-<!--                </li>-->
-<!--                <li class="registration__li">Формировать список продуктов для покупки</li>-->
-<!--            </ul>-->
-<!--        </div>-->
-
 
     {% endblock content %}
 

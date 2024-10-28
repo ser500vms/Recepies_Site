@@ -2,9 +2,8 @@
 @import '../vars';
 
 
-.registration {
+.login-page {
     display: flex;
-    flex-direction: row;
     justify-content: center;
     gap: 130px;
     padding-top: 64px;
@@ -12,56 +11,110 @@
 
     background: linear-gradient(to bottom left, $cardEndGradientBgColor, $cardStartGradientBgColor);
 
-    &__data {
+    &__form {
         display: flex;
         flex-direction: column;
-        gap: 34px;
-    }
+        gap: 10px;
+        
+        &__content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
-    &__personal-info {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        width: 360px;
+            &__label {
+                color: white;
+                font-size: 25px;
+                font-weight: 500;
+            }
+
+            &__input {
+                font-size: 25px;
+                font-weight: 500;
+                margin-left: 20px;
+            }
+
+            &__small {
+                text-align: center;
+                color: white;
+                font-size: 15px;
+                font-weight: 500;
+            }
+        }
+
+        &__submit-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 19px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border: none;
+    
+            color: rgb(0, 0, 0);
+            font-size: 30px;
+            font-weight: 400;
+            line-height: 17px;
+            text-align: left;
+    
+            opacity: 0.67;
+            background-color: rgb(225, 225, 225);
+            border-radius: 20px 20px;
+    
+        }
+
+        &__wrong-data {
+            display: flex;
+            justify-content: center;
+
+            &__subtitle {
+                color: white;
+                font-size: 18px;
+                font-weight: 500;
+            }
+        }
+
+        &__reset-link {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        &__reset-link a {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        &__create-link {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        &__create-link a {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
     }
 
     &__title {
         color: white;
         font-size: 30px;
         font-weight: 500;
-        text-align: left;
+        text-align: center;
     }
 
-    &__login-info {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        width: 360px;
-    }
-
-    &__button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 19px;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        padding-left: 20px;
-        padding-right: 20px;
-        border: none;
-
-        color: rgb(0, 0, 0);
-        font-size: 30px;
-        font-weight: 400;
-        line-height: 17px;
-        text-align: left;
-
-        opacity: 0.67;
-        background-color: rgb(225, 225, 225);
-        border-radius: 20px 20px;
-
-    }
 
 }
