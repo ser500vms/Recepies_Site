@@ -7,7 +7,8 @@ from django.views.generic import (
     TemplateView, 
     CreateView,
     DeleteView,
-    UpdateView
+    UpdateView,
+    ListView
 )
 from .form import CustomUserForm
 from django.contrib.auth.views import LoginView, LogoutView
@@ -17,13 +18,22 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
     UserPassesTestMixin
 )
+from recipiesapp.models import Recipe
 
 
 # Create your views here.
 
 
-class HomeView(TemplateView):
+# class HomeView(TemplateView):
+#     template_name = "base.html"
+
+
+class HomeView(ListView):
     template_name = "base.html"
+    model = Recipe
+    context_object_name = "recipies"
+
+
 
 
 class AboutUserView(LoginRequiredMixin, TemplateView):

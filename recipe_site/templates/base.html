@@ -109,94 +109,111 @@
             <p class="recipes-preview__block-description__subtitle">Насладитесь новыми рецептами</p>
         </div>
         <div class="recipes-preview__cards">
-            <div class="recipes-preview__card">
-                <div class="recipes-preview__card__img-container">
-                    <img src="{% static 'img/index/recipe-photo.jpg' %}" alt="Product image">          
-                </div>
-                <div class="recipes-preview__card__description">
-                    <h2 class="recipes-preview__card__description__title">
-                        Гаспаччо по андалуски
-                    </h2>
-                </div>
-                <div class="recipes-preview__card__cocking-time">
-                    <div class="recipes-preview__card__cocking-time__preparation">
-                        <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L13.5 14.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                        <p class="recipes-preview__card__cocking-time__preparation__title">
-                            12 часов 30 мин
-                        </p>
-                    </div>
-                    <div class="recipes-preview__card__cocking-time__preparation">
-                        <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L13.5 14.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                        <p class="recipes-preview__card__cocking-time__preparation__title">
-                            12 часов 30 мин
-                        </p>
-                    </div>
-                    <div class="recipes-preview__card__cocking-time__preparation">
-                        <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L13.5 14.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                        <p class="recipes-preview__card__cocking-time__preparation__title">
-                            5 порций
-                        </p>
-                    </div>
-                </div>
-                <div class="recipes-preview__card__author">
-                    <h1 class="recipes-preview__card__author__title">
-                        Автор: <span class="recipes-preview__card__author__title-span">Николай Давыдов</span>
-                    </h1>
-                </div>
-                <div class="recipes-preview__card__nutritional-value">
-                    <div class="recipes-preview__card__nutritional-value__description-box">
-                        <div class="recipes-preview__card__nutritional-value__description">
-                            <p class="recipes-preview__card__nutritional-value__description__title">
-                                Калории
-                            </p>
-                            <p class="recipes-preview__card__nutritional-value__description__subtitle">
-                                137.0 кК
+            {% if recipies %}
+
+                
+
+                {% for recipe in recipies %}
+                    <div class="recipes-preview__card">
+                        <div class="recipes-preview__card__img-container">
+                            <img src="media/{{ recipe.recipe_img }}" alt="Product image">
+                        </div>
+                        <div class="recipes-preview__card__description">
+                            <h2 class="recipes-preview__card__description__title">
+                                {{ recipe.name }}
+                            </h2>
+                            <h2 class="recipes-preview__card__description__title">
+                                {{ recipe.creation_time }}
+                            </h2>
+                        </div>
+                        <div class="recipes-preview__card__cocking-time">
+                            <div class="recipes-preview__card__cocking-time__preparation">
+                                <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L13.5 14.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                <p class="recipes-preview__card__cocking-time__preparation__title">
+                                    {{ recipe.cooking_time }}
+                                </p>
+                            </div>
+                            <!-- <div class="recipes-preview__card__cocking-time__preparation">
+                                <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L13.5 14.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                <p class="recipes-preview__card__cocking-time__preparation__title">
+                                    12 часов 30 мин
+                                </p>
+                            </div> -->
+                            <!-- <div class="recipes-preview__card__cocking-time__preparation">
+                                <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 7V12L13.5 14.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                <p class="recipes-preview__card__cocking-time__preparation__title">
+                                    5 порций
+                                </p>
+                            </div> -->
+                        </div>
+                        <div class="recipes-preview__card__author">
+                            <h1 class="recipes-preview__card__author__title">
+                                Автор: <span class="recipes-preview__card__author__title-span">
+                                    {% firstof recipe.author.first_name recipe.author.username %}</span>
+                            </h1>
+                        </div>
+                        <div class="recipes-preview__card__nutritional-value">
+                            <div class="recipes-preview__card__nutritional-value__description-box">
+                                <div class="recipes-preview__card__nutritional-value__description">
+                                    <p class="recipes-preview__card__nutritional-value__description__title">
+                                        Калории
+                                    </p>
+                                    <p class="recipes-preview__card__nutritional-value__description__subtitle">
+                                        137.0 кК
+                                    </p>
+                                </div>
+                                <div class="recipes-preview__card__nutritional-value__description">
+                                    <p class="recipes-preview__card__nutritional-value__description__title">
+                                        Белки
+                                    </p>
+                                    <p class="recipes-preview__card__nutritional-value__description__subtitle">
+                                        8.0 г
+                                    </p>
+                                </div>   
+                                <div class="recipes-preview__card__nutritional-value__description">
+                                    <p class="recipes-preview__card__nutritional-value__description__title">
+                                        Жиры
+                                    </p>
+                                    <p class="recipes-preview__card__nutritional-value__description__subtitle">
+                                        4.0 г
+                                    </p>
+                                </div>   
+                                <div class="recipes-preview__card__nutritional-value__description">
+                                    <p class="recipes-preview__card__nutritional-value__description__title">
+                                        Углеводы
+                                    </p>
+                                    <p class="recipes-preview__card__nutritional-value__description__subtitle">
+                                        17.0 г
+                                    </p>
+                                </div>                           
+                            </div>
+                            <div class="recipes-preview__card__nutritional-value__spoiler">
+                                <p class="recipes-preview__card__nutritional-value__spoiler__title">
+                                    Пищевая ценность на 100г, калорийность рассчитана для сырых продуктов
+                                </p>
+                            </div>
+                        </div>
+                        <div class="recipes-preview__card__short-description">
+                            <p class="recipes-preview__card__short-description__title">
+                                {{ recipe.short_description }}
                             </p>
                         </div>
-                        <div class="recipes-preview__card__nutritional-value__description">
-                            <p class="recipes-preview__card__nutritional-value__description__title">
-                                Белки
-                            </p>
-                            <p class="recipes-preview__card__nutritional-value__description__subtitle">
-                                8.0 г
-                            </p>
-                        </div>   
-                        <div class="recipes-preview__card__nutritional-value__description">
-                            <p class="recipes-preview__card__nutritional-value__description__title">
-                                Жиры
-                            </p>
-                            <p class="recipes-preview__card__nutritional-value__description__subtitle">
-                                4.0 г
-                            </p>
-                        </div>   
-                        <div class="recipes-preview__card__nutritional-value__description">
-                            <p class="recipes-preview__card__nutritional-value__description__title">
-                                Углеводы
-                            </p>
-                            <p class="recipes-preview__card__nutritional-value__description__subtitle">
-                                17.0 г
-                            </p>
-                        </div>                           
+                        <div class="recipes-preview__card__button-box">
+                            <a href="" class="recipes-preview__card__button-box__button">
+                                Приготовить
+                            </a>
+                        </div>
                     </div>
-                    <div class="recipes-preview__card__nutritional-value__spoiler">
-                        <p class="recipes-preview__card__nutritional-value__spoiler__title">
-                            Пищевая ценность на 100г, калорийность рассчитана для сырых продуктов
-                        </p>
-                    </div>
-                </div>
-                <div class="recipes-preview__card__short-description">
-                    <p class="recipes-preview__card__short-description__title">
-                        Отличный супец для жаркого лета, плюс не жирный и быстрый в приготовлении.
-                    </p>
-                </div>
-                <div class="recipes-preview__card__button-box">
-                    <button type="button" class="recipes-preview__card__button-box__button" id="1">
-                        Приготовить
-                    </button>
-                </div>
-            </div>
-        </div>
+                {% endfor %}
 
+
+
+            {% else %}
+
+            <h3>No products</h3>
+
+            {% endif %}
+        </div>
     </section>
 
     {% endblock content %}

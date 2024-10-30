@@ -22,6 +22,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('usersapp.urls')),
+    path('recipies/', include('recipiesapp.urls')),
 ]
 
 # Если режим debug включен, то media будет раздавать django

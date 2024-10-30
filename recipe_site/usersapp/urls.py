@@ -7,7 +7,7 @@ from .views import (
     MyLogoutView,
     AboutUserView,
     UserDeleteView,
-    UserUpdateView
+    UserUpdateView,
 )
 
 
