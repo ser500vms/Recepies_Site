@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Recipe, Category# устанавливаем связь с моделями, которые мы хотим отобразить
+from .models import Recipe, Category, Product, RecipeIngredient# устанавливаем связь с моделями, которые мы хотим отобразить
 from mptt.admin import MPTTModelAdmin
+from .forms import RecipeIngredientForm
 
 # Register your models here.
 
@@ -9,11 +10,16 @@ class CategoryInline(admin.TabularInline):
     model = Recipe.categories.through
 
 
+class RecipeIngridientsline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
+
 
 @admin.register(Recipe) # Этим декаратором мы регистрируем модель
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [
         CategoryInline,
+        RecipeIngridientsline,
     ]
 
     list_display = [
@@ -23,7 +29,6 @@ class RecipeAdmin(admin.ModelAdmin):
         'image', 
         'cooking_time', 
         'quantity_of_servings',
-        'ingridients', 
         'cooking_steps',
         'creation_time',
         'update_time',
@@ -47,7 +52,7 @@ class RecipeAdmin(admin.ModelAdmin):
             {
                 'classes': ['wide'],
                 'description': 'Main info',
-                'fields': ['cooking_time', 'quantity_of_servings', 'ingridients', 'cooking_steps'],
+                'fields': ['cooking_time', 'quantity_of_servings', 'cooking_steps'],
             },
         ),
 
@@ -70,3 +75,62 @@ class SubCategoryAdmin(MPTTModelAdmin):
     list_display = ['id', 'name', 'parent'] 
 
 
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = [
+        'id', 
+        'name', 
+        'author', 
+        'calories', 
+        'fats',
+        'carbohydrates', 
+        'proteins', 
+        ] 
+    search_fields = ['name'] # это для добавления поиска
+    search_help_text = 'Поиск по имени или цене продукта' # это описание поиска
+    readonly_fields = ['creation_time', 'update_time']
+
+    fieldsets = [
+        (
+            'Recipe info', 
+            {
+                'classes': ['wide'],
+                'description': 'Main info',
+                'fields': ['name', 'author'],
+            },
+        ),
+                (
+            'Recipe body', 
+            {
+                'classes': ['wide'],
+                'description': 'Main info',
+                'fields': ['calories', 'fats', 'carbohydrates', 'proteins'],
+            },
+        ),
+
+    ]
+
+
+@admin.register(RecipeIngredient)
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = [
+        'id', 
+        'recipe', 
+        'product', 
+        'quantity', 
+        'unit_of_measurement',
+        ] 
+    search_fields = ['recipe'] # это для добавления поиска
+    search_help_text = 'Поиск по имени или цене продукта' # это описание поиска
+    readonly_fields = ['creation_time', 'update_time']
+
+    fieldsets = [
+        (
+            'Recipe info', 
+            {
+                'classes': ['wide'],
+                'description': 'Main info',
+                'fields': ['recipe', 'product', 'quantity', 'unit_of_measurement'],
+            },
+        ),
+    ]
