@@ -206,6 +206,13 @@
               - [x] Проверил работу функций отображения, удаления, редактирования рецептов для не/авторизованных пользователей и области их видимостей
               - [x] Добавил файлы в git - git add .
               - [x] Сделал commit - git commit -m "Done view, add, delete recipe functions and access levels"
+              - [x] Выгрузил данные в репозиторий git push
+              - [x] Перешел в основную ветку - git checkout main
+              - [x] Выполнил обновление - git pull origin main
+              - [x] Произвел слияние - git merge recipies-v-1-0-0
+              - [x] Добавил файлы в git - git add .
+              - [x] Сделал commit - git commit -m "Done merge recipies branch"
+              - [x] Выгрузил данные в репозиторий git push
 
 
 
