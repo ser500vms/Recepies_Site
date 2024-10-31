@@ -111,9 +111,6 @@
             - [x] Проверил функционал выхода пользователя
 
           - *Настройка прав доступа и областей видимости не/авторизованных пользователей*
-
-            - Создал группу ... в которой установил права для всех пользователей !!!
-            - Создал ... для помещения вновь созданных пользователей в группу !!!
             - [x] Переработал шаблон recipe_site/templates/base.html для отображения нужного контента в зависимости от статуса авторизации 
             - [x] Добавил миксин LoginRequiredMixin к классу LkView для создания условия тотображения страницы, только если пользователь авторизован.
             - [x] Проверил работу функционала
@@ -149,15 +146,124 @@
             - [x] Добавил файлы в git - git add .
             - [x] Сделал commit - git commit -m "Done merge reg-log.... branch"
             - [x] Выгрузил данные в репозиторий git push
-
-
-
-          - *Настройка куки и кэша*
-            - Пока пропустить ... 
-
-          - *Примечания и доработки*
-            - Нужно сделать функционал смены пароля 
-            - Нужно сделать функционал поля емеил обязательным
-            - Нужно сделать функционал регистрации по нику или емайлу 
-            - Нужно сделать функционал восстановления пароля
               
+          - Разработка функционала отображения, создания, редактирования, удаления рецептов
+            - [x] Создал новую ветку recipies-v-1-0-0 для работы - git checkout -b recipies-v-1-0-0
+            - [x] Создал новое приложение recipiesapp для разработки данного функционала - python manage.py startapp recipiesapp
+            - [x] Подключил приложение в файле настроек recipe_site/settings/settings.py - INSTALLED_APPS = ['recipiesapp']
+            - [x] Создал файл recipe_site/recipiesapp/urls.py  и подключил его в файле recipe_site/settings/urls.py - path('recipies/', include('recipies.urls'))
+            
+            - *Разработка функционала отображения рецепта*
+              - [x] Установил mptt для работы с древовидной струкктурой - pip install django-mptt
+              - [x] В файле recipe_site/recipiesapp/models.py создал модель категорий Category(MPTTModel), использовал mptt, у меня будут родительские категории и в них дочернии. Такая структура мне показалась лучше подойдет для моего проекта, чем предложенная в задании.
+              - [x] В файле recipe_site/recipiesapp/models.py создал модель рецепта Recipe(models.Model)
+              - [x] Создал шаблон рецепта recipe_site/templates/recipiesapp/recipe.html
+              - [x] В файле recipe_site/recipiesapp/views.py создал представление рецепта RecipeView(TemplateView)
+              - [x] В файле recipe_site/recipiesapp/urls.py сделал подключение - path('recipe/<int:pk>', RecipeView.as_view(), name='recipe')
+              - [x] Проверил функционал отображения рецептов
+
+              
+            - *Разработка функционала добавления рецепта*
+              - [x] В файле recipe_site/recipiesapp/forms.py создал форму для довления рецепта RecipeForm(forms.ModelForm)
+              - [x]RecipeForm(forms.ModelForm) - переопределил поле categories - 
+                   categories = TreeNodeMultipleChoiceField(queryset=Category.objects.all(), required=False)
+              - [x] Создал шаблон для добавления рецепта recipe_site/templates/recipiesapp/add-recipe.html На заметку, для доступа к значениям  модели надо использовать form.fields.categories.queryset а не form.categories.queryset
+              - [x] В файле recipe_site/recipiesapp/views.py создал представление добавления рецепта AddRecipeView(CreateView)
+              - [x] В файле recipe_site/recipiesapp/urls.py сделал подключение - path('add-recipe/', AddRecipeView.as_view() name='add_recipe'),
+              - [x] Проверил функционал добавления рецептов
+              - [x] Обновил файл с зависимостями - pip freeze > requirements.txt 
+              - [x] Добавил файлы в git - git add .
+              - [x] Сделал commit - git commit -m "Done add recipe function"
+
+            - *Разработка функционала удаления рецепта*
+              - [x] В файле recipe_site/recipiesapp/views.py создал представление удаления рецепта RecipeDeleteView(DeleteView), шаблон для удаления использовал уже созданный в usersapp
+              - [x] В файле recipe_site/recipiesapp/urls.py сделал подключение   path('recipe/<int:pk>/delete/', RecipeDeleteView.as_view(), name='delete_recipe')
+              - [x] Проверил функционал удаления рецептов
+
+            - *Разработка функционала изменения рецепта*
+              - [x] Создал шаблон для изменения рецепта recipe_site/templates/recipiesapp/recipe_update_form.html
+              - [x] В файле recipe_site/recipiesapp/views.py создал представление изменения рецепта RecipeUpdateView(UpdateView)
+              - [x] В файле recipe_site/recipiesapp/urls.py сделал подключение  path('recipe/<int:pk>/update/', RecipeUpdateView.as_view(), name='update_recipe'),
+              - [x] Проверил функционал изменения рецептов
+
+            - *Доработка модели рецепта*
+              - [x] В файле recipe_site/recipiesapp/models.py доработал модель Recipe(models.Model). Добавил поля:
+                - изображение
+                - автор
+                - время приготовления
+                - кол-во порций
+                - ингридиенты
+                - шаги приготовления
+                - время создания
+                - время обновления
+              - [x] Произвел изменения в файле recipe_site/recipiesapp/forms.py и recipe_site/recipiesapp/views.py
+              - [x] Произвел изменения в шаблоне recipe_site/templates/recipiesapp/recipe_update_form.html, add-recipe.html и recipe.html 
+              - [x] Проверил работу функций отображения, удаления, редактирования рецептов с новой моделью
+
+            - *Настройка области видимости и доступа*
+              - [x] В файле recipe_site/recipiesapp/views.py подключил LoginRequiredMixin, UserPassesTestMixin и установил их для классов AddRecipeView(LoginRequiredMixin, CreateView), RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView), RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView). Прописал функцию def test_func(self) для RecipeDeleteView и RecipeUpdateView, таким образом пользователь сможет изменить или удалить только свои рецепты
+              - [x] В файле recipe_site/recipiesapp/views.py добавил функцию def form_valid(self, form) к классу AddRecipeView(LoginRequiredMixin, CreateView). Это позволяет передевать в форму при создании рецепта, текущего пользователя и установить его в качестве автора, таким образом автор будет установлен автоматически.
+              - [x] Проверил работу функций отображения, удаления, редактирования рецептов для не/авторизованных пользователей и области их видимостей
+              - [x] Добавил файлы в git - git add .
+              - [x] Сделал commit - git commit -m "Done view, add, delete recipe functions and access levels"
+
+
+
+            - *TO DO*
+              - middlewere !!
+
+              - эффективная работа с базой данных n+1
+
+              - логирование
+
+              - Заполнить категории и пордгатегории
+
+              - пагинация (загрузка только определенного колличества рецептов)
+
+              - Настройка куки и кэша
+              - Оптимизация с помощью кеширования
+
+              - Настройка сессий
+
+              - Доработать usersapp:
+                - Нужно сделать функционал смены пароля 
+                - Нужно сделать функционал поля емеил обязательным
+                - Нужно сделать функционал регистрации по нику или емайлу 
+                - Нужно сделать функционал восстановления пароля
+                - Аунтефикацию через гуггл )).**
+
+              - Установить ограничения по размерам загружаемых файлов и их разрешению
+
+              - Доработка форм:
+                - Нужно чтобы текстовые поля сохраняли форматирование, т.е отступы
+
+              - Реализация функции поиска на главной странице по имени рецепта и отображать только рецепты по имени, а если имени нет то все
+
+              - Реализация добавления фильтров при поиске по категориям, отображать рецепты у которых есть выбранная категория **
+
+              - Доработка шаблонов:
+                - base.html:
+                 - функция поиска и фильтрации, нужно показывать превью рецептов из отдельного шаблона
+                - создать шаблон recipe-preview.html для отображения карточки рецепта и в нем: 
+                  - продуамть чтобы в base.html отображался шаблон с кнопкой приготовить, а на account-page.html с кнопками изменить и удалить
+                  - сделать чтобы фотографии имели одинаковый размер
+                - account-page.html:
+                  - при отсутсвии рецептов вывести вместо Ваши рецепты, у вас еще нет рецептов, дерзайте!!!
+                - user-info.html:
+                 - Добавить кнопку с возвратом в личный кабинет (можно заменить кнопку добавить рецепт)
+                 - поле колличество рецептов должно их показывать
+                - add-recipe:
+                  - настроить отображение базового шаблона
+                - подумай про наследование в шаблонах личного кабинета и авторизованных пользователь не от базового
+
+              - *Доработка форм* задача на последок:
+               - Нужно добавить возможность создавать шаги рецептов
+               - Создать модель продуктов
+               - добавлять эти продукты в рецепт с указанием кол-ва и выбором едениц измерения
+                
+
+
+
+
+
+
