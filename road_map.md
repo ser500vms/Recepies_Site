@@ -215,6 +215,20 @@
               - [x] Выгрузил данные в репозиторий git push
 
 
+          - *Настройка пагинации*
+            - [x] Создал новую ветку pagiantion для работы - git checkout -b pagination
+            - [x] В файле recipe_site/usersapp/views.py добавил в классы HomeView, LkView пагинацию paginatio_by. 
+            - [x] В файле recipe_site/usersapp/views.py изменил LkView(LoginRequiredMixin, TemplateView) на LkView(LoginRequiredMixin, ListView) и измеил функцию get_queryset
+            - [x] Произвел изменения в шаблоне recipe_site/templates/pages/account-page.html и  recipe_site/templates/base.html добавил пагинацию
+            - [x] Добавил файлы в git - git add .
+            - [x] Сделал commit - git commit -m "Done pagination"
+            - [x] Выгрузил данные в репозиторий git push
+            - [x] Перешел в основную ветку - git checkout main
+            - [x] Выполнил обновление - git pull origin main
+            - [x] Произвел слияние - git merge pagination
+            - [x] Добавил файлы в git - git add .
+            - [x] Сделал commit - git commit -m "Done merge pagination branch"
+            - [x] Выгрузил данные в репозиторий git push
 
             - *TO DO*
               - middlewere !!
