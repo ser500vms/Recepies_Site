@@ -13,7 +13,6 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, 
-    PermissionRequiredMixin,
     UserPassesTestMixin
 )
 from recipiesapp.models import Recipe
@@ -24,6 +23,7 @@ from recipiesapp.models import Recipe
 
 class HomeView(ListView):
     template_name = "base.html"
+    paginate_by = 3
     model = Recipe
     context_object_name = "recipies"
 
@@ -34,16 +34,17 @@ class AboutUserView(LoginRequiredMixin, TemplateView):
     redirect_field_name = 'redirect_to'
 
 
-class LkView(LoginRequiredMixin, TemplateView):
+class LkView(LoginRequiredMixin, ListView):
     template_name = "pages/account-page.html"
+    paginate_by = 2
+    model = Recipe
     login_url = reverse_lazy('login')
     redirect_field_name = 'redirect_to'
+    context_object_name = "recipies"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Передаем рецепты, принадлежащие текущему пользователю
-        context['recipes'] = Recipe.objects.filter(author=self.request.user)
-        return context
+    def get_queryset(self):
+        # Фильтруем рецепты по текущему пользователю
+        return Recipe.objects.filter(author=self.request.user)
 
 
 class RegistrationView(CreateView):
