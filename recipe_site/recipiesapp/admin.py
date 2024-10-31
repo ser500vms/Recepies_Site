@@ -19,18 +19,19 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = [
         'name', 
         'short_description', 
-        # 'ingridients', 
-        # 'cooking_steps', 
-        # 'cooking_time', 
-        # 'creation_time',
-        # 'updated_at', 
-        # 'author',
-        # 'recipe_img',
+        'author', 
+        'image', 
+        'cooking_time', 
+        'quantity_of_servings',
+        'ingridients', 
+        'cooking_steps',
+        'creation_time',
+        'update_time',
         ] # тут мы добавляем колонки, которые хотим отоборазить
     
     search_fields = ['name'] # это для добавления поиска
     search_help_text = 'Поиск по имени или цене продукта' # это описание поиска
-    # readonly_fields = ['creation_time', 'updated_at']
+    readonly_fields = ['creation_time', 'update_time']
 
     fieldsets = [
         (
@@ -38,7 +39,15 @@ class RecipeAdmin(admin.ModelAdmin):
             {
                 'classes': ['wide'],
                 'description': 'Main info',
-                'fields': ['name', 'short_description'],
+                'fields': ['name', 'author', 'short_description', 'image'],
+            },
+        ),
+                (
+            'Recipe body', 
+            {
+                'classes': ['wide'],
+                'description': 'Main info',
+                'fields': ['cooking_time', 'quantity_of_servings', 'ingridients', 'cooking_steps'],
             },
         ),
 

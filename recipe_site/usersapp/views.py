@@ -1,7 +1,5 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.http import HttpResponseForbidden
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     TemplateView, 
@@ -24,16 +22,10 @@ from recipiesapp.models import Recipe
 # Create your views here.
 
 
-# class HomeView(TemplateView):
-#     template_name = "base.html"
-
-
 class HomeView(ListView):
     template_name = "base.html"
     model = Recipe
     context_object_name = "recipies"
-
-
 
 
 class AboutUserView(LoginRequiredMixin, TemplateView):
@@ -46,6 +38,12 @@ class LkView(LoginRequiredMixin, TemplateView):
     template_name = "pages/account-page.html"
     login_url = reverse_lazy('login')
     redirect_field_name = 'redirect_to'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Передаем рецепты, принадлежащие текущему пользователю
+        context['recipes'] = Recipe.objects.filter(author=self.request.user)
+        return context
 
 
 class RegistrationView(CreateView):
@@ -74,7 +72,7 @@ class MyLoginView(LoginView):
     template_name = "pages/enter-page.html"
     
     def get_success_url(self):
-        return reverse_lazy('lk_page') 
+        return reverse_lazy('lk_page', kwargs={'pk': self.request.user.pk})
     
 
 class MyLogoutView(LoginRequiredMixin, LogoutView):
@@ -96,7 +94,6 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == self.get_object()
 
  
-
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
     fields = "first_name", "last_name", "username", "email"
@@ -110,7 +107,8 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
     def get_object(self, queryset=None):
     # Возвращаем текущего пользователя
-        return self.request.user    
+        return self.request.user  
+  
     def test_func(self):
     # Позволяем редактировать только собствен данные        
         return self.request.user == self.get_object()

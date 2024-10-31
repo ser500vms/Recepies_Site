@@ -1,63 +1,36 @@
+{% if user.is_authenticated %}
 
-
-
-<!-- <form method="POST">
-    {% csrf_token %}
-    {{ form.name.label }} {{ form.name }}<br>
-    {{ form.short_description.label }} {{ form.short_description }}<br>
-
-    <div id="category-container">
-        {% for category in form.fields.categories.queryset %}
-            <div class="category-block">
-                {% for subcategory in category.children.all %}
-                    <p> {{ category.name }} </p>
-                    <input type="checkbox" id="{{ category.pk }}" name="{{ subcategory.name }}"/>
-                    <label for="{{ category.pk }}">{{ subcategory.name }}</label>
-                {% endfor %}
-                {% if category.children %}
-                    <p> {{ category.children.name }} </p>
-                {% endif %} -->
-                <!-- <h4>{{ category.name }}</h4> -->
-                <!-- <select>
-                    <option value="">-- Выберите подкатегорию --</option>
-                    {% for subcategory in category.children.all %}
-                        <option value="{{ subcategory.id }}">{% if subcategory.id == form.subcategory.value %}selected{% endif %}{{ subcategory.name }}</option> 
+    <form  method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.name.label }} {{ form.name }}<br>
+        {{ form.image.label }} {{ form.image }}<br>
+        {{ form.short_description.label }} {{ form.short_description }}<br>
+        <div>
+            {{ form.categories.label }}<br>
+            {% for category in form.fields.categories.queryset %}
+                {% if not category.parent %}  <!-- Только корневые категории -->
+                    <p><strong>{{ category.name }}</strong></p>
+                    {% for subcategory in category.get_children %}
+                        <input 
+                            type="checkbox" 
+                            name="categories" 
+                            value="{{ subcategory.id }}" 
+                            id="category_{{ subcategory.id }}"
+                            {% if subcategory.id in selected_categories %} checked {% endif %}
+                        />
+                        <label for="category_{{ subcategory.id }}">{{ subcategory.name }}</label><br>
                     {% endfor %}
-                </select> -->
-            </div>
-        <!-- {% endfor %} -->
+                {% endif %}
+            {% endfor %}
+        </div>
+        {{ form.cooking_time.label }} {{ form.cooking_time }}<br>
+        {{ form.quantity_of_servings.label }} {{ form.quantity_of_servings }}<br>
+        {{ form.ingridients.label }} {{ form.ingridients }}<br>
+        {{ form.cooking_steps.label }} {{ form.cooking_steps }}<br>
 
-        
+        <br>
+        <br>
+        <button type="submit">Добавить рецепт</button>
+    </form>
 
-
-    <!-- <button type="submit">Добавить рецепт</button> -->
-<!-- </form> -->
-
-<form  method="post">
-    {% csrf_token %}
-    {{ form.name.label }} {{ form.name }}<br>
-    {{ form.short_description.label }} {{ form.short_description }}<br>
-    <div>
-        {{ form.categories.label }}<br>
-        {% for category in form.fields.categories.queryset %}
-            {% if not category.parent %}  <!-- Только корневые категории -->
-                <p><strong>{{ category.name }}</strong></p>
-                {% for subcategory in category.get_children %}
-                    <input 
-                        type="checkbox" 
-                        name="categories" 
-                        value="{{ subcategory.id }}" 
-                        id="category_{{ subcategory.id }}"
-                        {% if subcategory.id in selected_categories %} checked {% endif %}
-                    />
-                    <label for="category_{{ subcategory.id }}">{{ subcategory.name }}</label><br>
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-    </div>
-
-    <br>
-    <br>
-    <button type="submit">Добавить рецепт</button>
-</form>
-
+{% endif %}
