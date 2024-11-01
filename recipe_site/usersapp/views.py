@@ -15,7 +15,7 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin, 
     UserPassesTestMixin
 )
-from recipiesapp.models import Recipe
+from recipiesapp.models import Recipe, Category
 from django.db.models import Q
 
 
@@ -30,10 +30,26 @@ class HomeView(ListView):
     
     def get_queryset(self):
         query = self.request.GET.get('q', '').strip()
+        categories  = self.request.GET.getlist('categories')  # Получаем выбранные категории
+
+        queryset = Recipe.objects.all()
+
+        # Если есть запрос по названию
         if query:
-            return Recipe.objects.filter(Q(name__icontains=query) | Q(name__icontains=query.capitalize()))
-        return Recipe.objects.all()
+            queryset = queryset.filter(Q(name__icontains=query) | Q(name__icontains=query.capitalize()))
+
+        # Если есть выбранные категории
+        if categories:
+            queryset = queryset.filter(categories__id__in=categories).distinct()
+
+
+        return  queryset # Возвращаем уникальные рецепты
     
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
 
 class AboutUserView(LoginRequiredMixin, TemplateView):
     template_name = "pages/about-user.html"

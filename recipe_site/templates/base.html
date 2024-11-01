@@ -60,44 +60,35 @@
         </div>
         <div class="header-filter-container center">
             <div class="header-filter-container-filter">
-                <details open class="header-filter-container__country-details">
-                    <summary class="header-filter-container__country-details__summary">
-                        Выбирите кухню
-                    </summary>
-                    <div class="header-filter-container__country-details__box">
-                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="asia" name="asia"/>
-                        <label class="header-filter-container__country-details__box__label" for="asia">Азиатская кухня</label>
+                <form action="{% url 'home_page' %}" method="get" class="header-container__left__filter-form">
+                    <div>
+                        <label>Категории:</label><br>
+                        {% for category in categories  %}
+                            {% if not category.parent %} 
+                                <p><strong>{{ category.name }}</strong></p>
+                                {% for subcategory in category.get_children %}
+                                    <input 
+                                        type="checkbox" 
+                                        name="categories" 
+                                        value="{{ subcategory.id }}" 
+                                        id="category_{{ subcategory.id }}"
+                                    />
+                                    <label for="category_{{ subcategory.id }}">{{ subcategory.name }}</label><br>
+                                {% endfor %}
+                                <button type="submit" class="radio_sub">
+                                </button>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    <div class="header-filter-container__country-details__box">
-                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="russia" name="russia"/>
-                        <label class="header-filter-container__country-details__box__label" for="russia">Российская кухня</label>
-                    </div>
-                    <div class="header-filter-container__country-details__box">
-                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="georg" name="georg"/>
-                        <label class="header-filter-container__country-details__box__label" for="georg">Грузинская кухня</label>
-                    </div>
-                </details>
-                <details open class="header-filter-container__country-details">
-                    <summary class="header-filter-container__country-details__summary">
-                        Выбирите кухню
-                    </summary>
-                    <div class="header-filter-container__country-details__box">
-                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="asia" name="asia"/>
-                        <label class="header-filter-container__country-details__box__label" for="asia">Азиатская кухня</label>
-                    </div>
-                    <div class="header-filter-container__country-details__box">
-                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="russia" name="russia"/>
-                        <label class="header-filter-container__country-details__box__label" for="russia">Российская кухня</label>
-                    </div>
-                    <div class="header-filter-container__country-details__box">
-                        <input class="header-filter-container__country-details__box__input" type="checkbox" id="georg" name="georg"/>
-                        <label class="header-filter-container__country-details__box__label" for="georg">Грузинская кухня</label>
-                    </div>
-                </details>
+                    <button type="submit" id="main_sub_btn"  class="header-filter-container__button">
+                        Применить
+                    </button>
+                </form>
+
+
             </div>
-            <button type="button" class="header-filter-container__button">
-                Применить
-            </button>
+
+
         </div>
     </header>
 
