@@ -22,7 +22,6 @@ RecipeIngredientFormSet = inlineformset_factory(
 )
 
 
-
 class AddRecipeView(LoginRequiredMixin, CreateView):
     form_class = RecipeForm
     template_name = "recipiesapp/add-recipe.html"
@@ -38,6 +37,12 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.author = self.request.user
         self.object.save()
+
+        # Привязываем и сохраняем категории рецепта
+        categories = form.cleaned_data.get('categories')
+        if categories:
+            self.object.categories.set(categories)
+
 
         # Создаем и сохраняем формы ингредиентов
         ingredient_formset = RecipeIngredientFormSet(self.request.POST, instance=self.object)
@@ -55,8 +60,7 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
         return self.render_to_response(
             self.get_context_data(form=form, ingredient_formset=ingredient_formset)
         )
-
-        
+      
 
 class RecipeView(TemplateView):
     template_name = "recipiesapp/recipe.html"
@@ -80,26 +84,60 @@ class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Recipe
-    fields = "name", "short_description", "categories", "image", "cooking_time", "quantity_of_servings", "ingridients", "cooking_steps"
+    fields = ["name", "short_description", "categories", "image", "cooking_time", "quantity_of_servings", "cooking_steps"]
     template_name = "recipiesapp/recipe_update_form.html"
 
     def form_valid(self, form):
-        # Устанавливаем автора как текущего пользователя
-        form.instance.author = self.request.user
-        return super().form_valid(form)  
-    
+        # Сохраняем рецепт
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
+
+        # Инициализируем формсет ингредиентов
+        ingredient_formset = RecipeIngredientFormSet(self.request.POST, instance=self.object)
+
+        # Проверка валидности формсета ингредиентов
+        if ingredient_formset.is_valid():
+            # Проверяем наличие id для существующих объектов
+            for ingredient_form in ingredient_formset:
+                if not ingredient_form.cleaned_data.get("id") and ingredient_form.instance.pk:
+                    ingredient_form.cleaned_data["id"] = ingredient_form.instance.pk
+
+            # Сохранение формсета после валидации и добавления id
+            ingredient_formset.save()
+
+            # Сохраняем выбранные категории
+            form.cleaned_data['categories'] = form.cleaned_data.get('categories')
+            self.object.categories.set(form.cleaned_data['categories'])
+
+            return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
+        else:
+            # Логирование ошибок для отладки
+            print("Ошибки formset:")
+            for i, f in enumerate(ingredient_formset.forms):
+                print(f"Форма ингредиента {i}: ошибки: {f.errors}")
+                if 'id' in f.errors:
+                    print(f"Поле 'id' формы ингредиента {i}: значение = {f['id'].value()}")
+
+            return self.render_to_response(
+                self.get_context_data(form=form, ingredient_formset=ingredient_formset)
+            )
+
+
     def test_func(self):
-    # Позволяем редактировать только собствен данные        
+        # Ограничение доступа только для автора рецепта
         return self.request.user == self.get_object().author
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Получаем список ID выбранных категорий для текущего рецепта
+        context['ingredient_formset'] = RecipeIngredientFormSet(instance=self.object)  # Подключаем formset ингредиентов
         context['selected_categories'] = self.object.categories.values_list('id', flat=True)
         return context
 
-    def get_success_url(self):
-        return reverse(
-            "recipe",
-            kwargs={"pk": self.object.pk},
+    def form_invalid(self, form):
+        # Возвращаем контекст с ошибками, если основная форма рецепта не валидна
+        ingredient_formset = RecipeIngredientFormSet(self.request.POST)
+        return self.render_to_response(
+            self.get_context_data(form=form, ingredient_formset=ingredient_formset)
         )
+    

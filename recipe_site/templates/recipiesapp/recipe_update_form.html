@@ -2,13 +2,22 @@
 
     <form  method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.name.label }} {{ form.name }}<br>
-        {{ form.image.label }} {{ form.image }}<br>
-        {{ form.short_description.label }} {{ form.short_description }}<br>
+        {{ form.name.label }} {{ form.name }}
+        <br>
+        <br>
+
+        {{ form.image.label }} {{ form.image }}
+        <br>
+        <br>
+
+        {{ form.short_description.label }} {{ form.short_description }}
+        <br>
+        <br>
+
         <div>
             {{ form.categories.label }}<br>
             {% for category in form.fields.categories.queryset %}
-                {% if not category.parent %}  <!-- Только корневые категории -->
+                {% if not category.parent %} 
                     <p><strong>{{ category.name }}</strong></p>
                     {% for subcategory in category.get_children %}
                         <input 
@@ -16,21 +25,101 @@
                             name="categories" 
                             value="{{ subcategory.id }}" 
                             id="category_{{ subcategory.id }}"
-                            {% if subcategory.id in selected_categories %} checked {% endif %}
-                        />
+                            {% if subcategory.id in selected_categories %} checked {% endif %} />
                         <label for="category_{{ subcategory.id }}">{{ subcategory.name }}</label><br>
                     {% endfor %}
                 {% endif %}
             {% endfor %}
         </div>
-        {{ form.cooking_time.label }} {{ form.cooking_time }}<br>
-        {{ form.quantity_of_servings.label }} {{ form.quantity_of_servings }}<br>
-        {{ form.ingridients.label }} {{ form.ingridients }}<br>
-        {{ form.cooking_steps.label }} {{ form.cooking_steps }}<br>
 
+        {{ form.cooking_time.label }} {{ form.cooking_time }}
         <br>
         <br>
-        <button type="submit">Обновить рецепт</button>
+
+        {{ form.quantity_of_servings.label }} {{ form.quantity_of_servings }}
+        <br>
+        <br>
+
+        <div id="ingredient-forms">
+            {{ ingredient_formset.management_form }}
+            {% for form in ingredient_formset %}
+                <div class="ingredient-form">
+                    {{ form.id }}  <!-- Это скрытое поле для ID -->
+                    {{ form.product.label }} {{ form.product }}
+                    <br><br>
+        
+                    {{ form.quantity.label }} {{ form.quantity }}
+                    <br><br>
+        
+                    {{ form.unit_of_measurement.label }} {{ form.unit_of_measurement }}
+                    <br><br>
+                    <button type="button" class="delete-form">Удалить</button>
+                    <br><br>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Шаблон для новой формы ингредиента (скрыт) -->
+        <div class="ingredient-form-template" style="display: none;">
+            <div class="ingredient-form">
+                {{ ingredient_formset.empty_form.product.label }} {{ ingredient_formset.empty_form.product }}
+                <br><br>
+        
+                {{ ingredient_formset.empty_form.quantity.label }} {{ ingredient_formset.empty_form.quantity }}
+                <br><br>
+        
+                {{ ingredient_formset.empty_form.unit_of_measurement.label }} {{ ingredient_formset.empty_form.unit_of_measurement }}
+                <br><br>
+        
+                <button type="button" class="delete-form">Удалить</button>
+            </div>
+        </div>
+        
+    
+        <button type="button" id="add-ingredient">Добавить ингредиент</button>
+        <br><br>
+
+
+        <button type="submit">Добавить рецепт</button>
+        <br>
+        <br>
+        {{ form.cooking_steps.label }} {{ form.cooking_steps }}
     </form>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ingredientFormsContainer = document.getElementById('ingredient-forms');
+            const ingredientTemplate = document.querySelector('.ingredient-form-template').cloneNode(true);
+            ingredientTemplate.style.display = 'block';
+
+            let formCount = parseInt(document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value);
+            document.getElementById('add-ingredient').addEventListener('click', function () {
+                // Клонируем шаблон формы
+                const newForm = ingredientTemplate.cloneNode(true);
+    
+                // Обновляем индексы имен полей в новой форме
+                newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formCount);
+                ingredientFormsContainer.appendChild(newForm);
+    
+                formCount++;
+                console.log(`счетчик форм  после нажатия кнопки - ${formCount}`);
+                // Обновляем значение поля total_forms в Management Form
+                const totalFormsEl = document.querySelector('#id_recipe_ingredients-TOTAL_FORMS');
+                totalFormsEl.value = formCount;  // Исправлено здесь
+                console.log(`счетчик форм после сохранения - ${totalFormsEl.value}`);
+            });
+    
+            // Удаление формы при нажатии на "Удалить"
+            ingredientFormsContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('delete-form')) {
+                    e.target.closest('.ingredient-form').remove();
+                    formCount--;
+                    // Обновляем значение поля total_forms при удалении
+                    document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value = formCount;  // Исправлено здесь
+                }
+            });
+        });
+    </script>
+    
 {% endif %}
+

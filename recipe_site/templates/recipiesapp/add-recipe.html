@@ -14,7 +14,7 @@
         <br>
         <br>
 
-        <!-- <div>
+        <div>
             {{ form.categories.label }}<br>
             {% for category in form.fields.categories.queryset %}
                 {% if not category.parent %} 
@@ -30,7 +30,7 @@
                     {% endfor %}
                 {% endif %}
             {% endfor %}
-        </div> -->
+        </div>
 
         {{ form.cooking_time.label }} {{ form.cooking_time }}
         <br>

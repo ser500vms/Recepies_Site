@@ -75,8 +75,5 @@ class RecipeIngredient(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        unique_together = ('recipe', 'product')
-
     def __str__(self):
         return f"{self.quantity} {self.get_unit_of_measurement_display()} {self.product.name} для {self.recipe.name}"
