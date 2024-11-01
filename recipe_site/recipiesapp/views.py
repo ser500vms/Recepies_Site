@@ -17,45 +17,45 @@ RecipeIngredientFormSet = inlineformset_factory(
     Recipe,
     RecipeIngredient,
     form=RecipeIngredientForm,
-    extra=2,  # Количество пустых форм для добавления ингредиентов по умолчанию
+    extra=1,  # Количество пустых форм для добавления ингредиентов по умолчанию
     can_delete=True  # Позволяет удалять ингредиенты
 )
+
+
 
 class AddRecipeView(LoginRequiredMixin, CreateView):
     form_class = RecipeForm
     template_name = "recipiesapp/add-recipe.html"
 
-    # def get_success_url(self):
-    #     return reverse("recipe", kwargs={"pk": self.object.pk})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Используем только одну пустую форму для начала
+        context['ingredient_formset'] = RecipeIngredientFormSet(queryset=RecipeIngredient.objects.none())
+        return context
 
-    def get(self, request):
-        form = RecipeForm()
-        ingredient_formset = RecipeIngredientFormSet(queryset=RecipeIngredient.objects.none())
-        return render(request, 'recipiesapp/add-recipe.html', {
-            'form': form,
-            'ingredient_formset': ingredient_formset,
-        })
+    def form_valid(self, form):
+        # Сохраняем рецепт
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
 
-    def post(self, request):
-        form = RecipeForm(request.POST, request.FILES)
-        ingredient_formset = RecipeIngredientFormSet(request.POST)
-
-        if form.is_valid() and ingredient_formset.is_valid():
-            recipe = form.save(commit=False)
-            recipe.author = request.user
-            recipe.save()
-
-            ingredient_formset.instance = recipe
+        # Создаем и сохраняем формы ингредиентов
+        ingredient_formset = RecipeIngredientFormSet(self.request.POST, instance=self.object)
+        if ingredient_formset.is_valid():
             ingredient_formset.save()
+            return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
+        else:
+            return self.render_to_response(
+                self.get_context_data(form=form, ingredient_formset=ingredient_formset)
+            )
 
-            # Используем 'recipe.pk' для перенаправления после сохранения
-            return redirect(reverse("recipe", kwargs={"pk": recipe.pk}))  
+    def form_invalid(self, form):
+        # Если форма рецепта не валидна, возвращаем ошибочный контекст
+        ingredient_formset = RecipeIngredientFormSet(self.request.POST)
+        return self.render_to_response(
+            self.get_context_data(form=form, ingredient_formset=ingredient_formset)
+        )
 
-        # Если формы не прошли валидацию, рендерим страницу с ошибками
-        return render(request, 'recipiesapp/add-recipe.html', {
-            'form': form,
-            'ingredient_formset': ingredient_formset,
-        })
         
 
 class RecipeView(TemplateView):
