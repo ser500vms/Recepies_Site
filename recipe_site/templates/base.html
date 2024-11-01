@@ -26,15 +26,17 @@
                 <a href="{% url 'home_page' %}" class="header-container__left__search-form__submit-button" type="button" aria-label="Искать">
                     Домой
                 </a>
-                <form role="search" class="header-container__left__search-form">
-                    <input type="search" class="header-container__left__search-form__input-input" placeholder="Поиск по рецептам" >
+                <form action="{% url 'home_page' %}" method="get" class="header-container__left__search-form">
+                    <input name="q" type="text" class="header-container__left__search-form__input-input" placeholder="Поиск по рецептам" >
                     <button class="header-container__left__search-form__filters-button" type="button" aria-label="Открыть список фильтров">
                         <svg width="25" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation"><path d="M12.418 20.444h8.272a.444.444 0 1 0 0-.889h-8.272A2.003 2.003 0 0 0 10.468 18c-.95 0-1.748.665-1.95 1.555H2.912a.445.445 0 1 0 0 .89h5.606c.202.889.998 1.555 1.95 1.555.95 0 1.748-.665 1.95-1.556Zm6.667-8h1.605a.445.445 0 0 0 0-.889h-1.605A2.003 2.003 0 0 0 17.135 10c-.95 0-1.749.665-1.95 1.555H2.912a.445.445 0 1 0 0 .89h12.271c.203.889.999 1.555 1.95 1.555.95 0 1.748-.665 1.95-1.556Zm-10.667-8H20.69a.445.445 0 0 0 0-.888H8.42A2.003 2.003 0 0 0 6.467 2c-.95 0-1.748.665-1.95 1.556H2.912a.444.444 0 1 0 0 .889h1.606C4.72 5.334 5.516 6 6.468 6c.95 0 1.748-.665 1.95-1.555Z" fill="#241F20"></path></svg>
                     </button>
+
+                    <button class="header-container__left__search-form__submit-button" type="submit" aria-label="Искать">
+                        <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" class="searchInput_searchSvg__sqDxD" role="presentation"><path d="M10.04 2.5a7.539 7.539 0 1 1 0 15.079 7.539 7.539 0 0 1 0-15.078ZM15.725 15.724 22 22" stroke="#241F20" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
                 </form>
-                <button class="header-container__left__search-form__submit-button" type="submit" aria-label="Искать">
-                    <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" class="searchInput_searchSvg__sqDxD" role="presentation"><path d="M10.04 2.5a7.539 7.539 0 1 1 0 15.079 7.539 7.539 0 0 1 0-15.078ZM15.725 15.724 22 22" stroke="#241F20" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                </button>
+
             </div>
             <div class="header-container__right">
 

@@ -16,6 +16,7 @@ from django.contrib.auth.mixins import (
     UserPassesTestMixin
 )
 from recipiesapp.models import Recipe
+from django.db.models import Q
 
 
 # Create your views here.
@@ -26,7 +27,13 @@ class HomeView(ListView):
     paginate_by = 3
     model = Recipe
     context_object_name = "recipies"
-
+    
+    def get_queryset(self):
+        query = self.request.GET.get('q', '').strip()
+        if query:
+            return Recipe.objects.filter(Q(name__icontains=query) | Q(name__icontains=query.capitalize()))
+        return Recipe.objects.all()
+    
 
 class AboutUserView(LoginRequiredMixin, TemplateView):
     template_name = "pages/about-user.html"
