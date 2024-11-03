@@ -30,6 +30,7 @@ class Recipe(models.Model):
     image = models.ImageField(upload_to='users_recipes_img', blank=False)
     cooking_time = models.PositiveIntegerField(blank=False)
     quantity_of_servings = models.PositiveIntegerField(default=1, blank=False)
+    recipe_calories = models.PositiveIntegerField(blank=True, null=True)
     cooking_steps = models.TextField(blank=False)
     creation_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)

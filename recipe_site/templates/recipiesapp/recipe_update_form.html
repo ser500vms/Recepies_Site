@@ -44,7 +44,7 @@
             {{ ingredient_formset.management_form }}
             {% for form in ingredient_formset %}
                 <div class="ingredient-form">
-                    {{ form.id }}  <!-- Это скрытое поле для ID -->
+                    {{ form.id }} <!-- Это скрытое поле для ID -->
                     {{ form.product.label }} {{ form.product }}
                     <br><br>
         
@@ -53,6 +53,9 @@
         
                     {{ form.unit_of_measurement.label }} {{ form.unit_of_measurement }}
                     <br><br>
+
+                    <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
+
                     <button type="button" class="delete-form">Удалить</button>
                     <br><br>
                 </div>
@@ -70,7 +73,7 @@
         
                 {{ ingredient_formset.empty_form.unit_of_measurement.label }} {{ ingredient_formset.empty_form.unit_of_measurement }}
                 <br><br>
-        
+                <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
                 <button type="button" class="delete-form">Удалить</button>
             </div>
         </div>
@@ -112,7 +115,11 @@
             // Удаление формы при нажатии на "Удалить"
             ingredientFormsContainer.addEventListener('click', function (e) {
                 if (e.target.classList.contains('delete-form')) {
-                    e.target.closest('.ingredient-form').remove();
+                    e.target.closest('.ingredient-form').style.display = 'none';
+                    const deleteField = ingredientFormsContainer.querySelector('.delete-checbox');
+                    deleteField.checked = 'True'; // Устанавливаем значение на True
+                    console.log(deleteField.checked);
+
                     formCount--;
                     // Обновляем значение поля total_forms при удалении
                     document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value = formCount;  // Исправлено здесь

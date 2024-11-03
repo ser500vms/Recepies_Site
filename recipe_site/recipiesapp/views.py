@@ -11,6 +11,7 @@ from django.views.generic import (
     UpdateView,
 )
 from .forms import RecipeForm
+from decimal import Decimal, ROUND_UP
 
 
 RecipeIngredientFormSet = inlineformset_factory(
@@ -43,16 +44,17 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
         if categories:
             self.object.categories.set(categories)
 
-
         # Создаем и сохраняем формы ингредиентов
         ingredient_formset = RecipeIngredientFormSet(self.request.POST, instance=self.object)
         if ingredient_formset.is_valid():
             ingredient_formset.save()
+
             return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
         else:
             return self.render_to_response(
                 self.get_context_data(form=form, ingredient_formset=ingredient_formset)
             )
+        
 
     def form_invalid(self, form):
         # Если форма рецепта не валидна, возвращаем ошибочный контекст
@@ -98,6 +100,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
         # Проверка валидности формсета ингредиентов
         if ingredient_formset.is_valid():
+
             # Проверяем наличие id для существующих объектов
             for ingredient_form in ingredient_formset:
                 if not ingredient_form.cleaned_data.get("id") and ingredient_form.instance.pk:
@@ -105,6 +108,26 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
             # Сохранение формсета после валидации и добавления id
             ingredient_formset.save()
+
+            # Подсчет калорий для рецепта
+            total_calories = 0
+            for ingredient_form in ingredient_formset:
+                # Проверка, что product и quantity присутствуют в cleaned_data
+                if 'product' in ingredient_form.cleaned_data and 'quantity' in ingredient_form.cleaned_data:
+                    product = ingredient_form.cleaned_data['product']
+                    quantity = Decimal(ingredient_form.cleaned_data['quantity'])
+                    unit_calories = Decimal(product.calories / 100)  # калорийность продукта на единицу измерения
+
+                    # Подсчет общей калорийности на основе количества
+                    ingredient_calories = (quantity * unit_calories).quantize(Decimal('0.01'), rounding=ROUND_UP)
+                    total_calories += ingredient_calories
+
+                    # Вывод информации по каждому ингредиенту
+                    print(f"Ингредиент: {product.name}, Количество: {quantity}, Калорийность на единицу: {unit_calories}, Общая калорийность: {ingredient_calories}")
+
+
+            self.object.recipe_calories = total_calories
+            self.object.save()
 
             # Сохраняем выбранные категории
             form.cleaned_data['categories'] = form.cleaned_data.get('categories')

@@ -92,7 +92,6 @@
             let totalFormsInput = document.querySelector('#id_recipe_ingredients-TOTAL_FORMS');
             if (totalFormsInput) {
                 let formCount = parseInt(totalFormsInput.value);
-                console.log(`счетчик форм - ${formCount}`);
             } else {
                 console.error("TOTAL_FORMS element not found");
 }
@@ -108,11 +107,9 @@
                 ingredientFormsContainer.appendChild(newForm);
     
                 formCount++;
-                console.log(`счетчик форм  после нажатия кнопки - ${formCount}`);
                 // Обновляем значение поля total_forms в Management Form
                 const totalFormsEl = document.querySelector('#id_recipe_ingredients-TOTAL_FORMS');
                 totalFormsEl.value = formCount;  // Исправлено здесь
-                console.log(`счетчик форм после сохранения - ${totalFormsEl.value}`);
             });
     
             // Удаление формы при нажатии на "Удалить"

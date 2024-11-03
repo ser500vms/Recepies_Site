@@ -30,6 +30,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'cooking_time', 
         'quantity_of_servings',
         'cooking_steps',
+        'recipe_calories',
         'creation_time',
         'update_time',
         ] # тут мы добавляем колонки, которые хотим отоборазить
@@ -52,7 +53,7 @@ class RecipeAdmin(admin.ModelAdmin):
             {
                 'classes': ['wide'],
                 'description': 'Main info',
-                'fields': ['cooking_time', 'quantity_of_servings', 'cooking_steps'],
+                'fields': ['recipe_calories', 'cooking_time', 'quantity_of_servings', 'cooking_steps'],
             },
         ),
 
