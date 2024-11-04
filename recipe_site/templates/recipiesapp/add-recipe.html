@@ -68,7 +68,7 @@
                 {{ ingredient_formset.empty_form.unit_of_measurement.label }} {{ ingredient_formset.empty_form.unit_of_measurement }}
                 <br><br>
         
-                <button type="button" class="delete-form">Удалить</button>
+                <button type="button" class="delete-form">Удалить ингредиент</button>
             </div>
         </div>
         
@@ -76,27 +76,61 @@
         <button type="button" id="add-ingredient">Добавить ингредиент</button>
         <br><br>
 
+        <div id="step-forms">
+            {{ step_formset.management_form }}
+            {% for form in step_formset %}
+                <div class="step-form">
+                    {{ form.text.label }} {{ form.text }}
+                    <br><br>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Шаблон для новой формы ингредиента (скрыт) -->
+        <div class="step-form-template" style="display: none;">
+            <div class="step-form">
+                {{ step_formset.empty_form.text.label }} {{ step_formset.empty_form.text }}
+                <br><br>
+            <button type="button" class="delete-form-step">Удалить шаг</button>
+            </div>
+        </div>
+        
+    
+        <button type="button" id="add-step">Добавить шаг</button>
+        <br><br>
 
         <button type="submit">Добавить рецепт</button>
         <br>
         <br>
-        {{ form.cooking_steps.label }} {{ form.cooking_steps }}
     </form>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // для ингридиентов
             const ingredientFormsContainer = document.getElementById('ingredient-forms');
             const ingredientTemplate = document.querySelector('.ingredient-form-template').cloneNode(true);
             ingredientTemplate.style.display = 'block';
-
             let totalFormsInput = document.querySelector('#id_recipe_ingredients-TOTAL_FORMS');
             if (totalFormsInput) {
                 let formCount = parseInt(totalFormsInput.value);
             } else {
                 console.error("TOTAL_FORMS element not found");
-}
+            }
 
+            // для шагов
+            const stepFormsContainer = document.getElementById('step-forms');
+            const stepTemplate = document.querySelector('.step-form-template').cloneNode(true);
+            console.log(stepTemplate);
+            stepTemplate.style.display = 'block';
 
+            let totalFormsStepInput = document.querySelector('#id_recipe_steps-TOTAL_FORMS');
+            if (totalFormsStepInput) {
+                let formCountStep = parseInt(totalFormsStepInput.value);
+            } else {
+                console.error("TOTAL_FORMS element not found");
+            }
+
+            // для ингридиентов
             let formCount = parseInt(document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value);
             document.getElementById('add-ingredient').addEventListener('click', function () {
                 // Клонируем шаблон формы
@@ -112,13 +146,68 @@
                 totalFormsEl.value = formCount;  // Исправлено здесь
             });
     
+
+            // для шагов
+
+            let formCountStep = parseInt(document.querySelector('#id_recipe_steps-TOTAL_FORMS').value);
+            document.getElementById('add-step').addEventListener('click', function () {
+                // Клонируем шаблон формы
+                const newStepForm = stepTemplate.cloneNode(true);
+    
+                // Обновляем индексы имен полей в новой форме
+                newStepForm.innerHTML = newStepForm.innerHTML.replace(/__prefix__/g, formCountStep);
+                stepFormsContainer.appendChild(newStepForm);
+    
+                formCountStep++;
+                // Обновляем значение поля total_forms в Management Form
+                const totalFormsStepEl = document.querySelector('#id_recipe_steps-TOTAL_FORMS');
+                totalFormsStepEl.value = formCountStep;  // Исправлено здесь
+            });
+
+            // для ингридиентов
             // Удаление формы при нажатии на "Удалить"
             ingredientFormsContainer.addEventListener('click', function (e) {
                 if (e.target.classList.contains('delete-form')) {
                     e.target.closest('.ingredient-form').remove();
+
+
+                    // Обновляем значения индексов форм
+                    const forms = ingredientFormsContainer.querySelectorAll('.ingredient-form');
+                    forms.forEach((form, index) => {
+                        // Обновляем индексы в полях формы
+                        form.querySelectorAll('input, select, textarea').forEach((input) => {
+                            input.name = input.name.replace(/-\d+-/, `-${index}-`);
+                            input.id = input.id.replace(/-\d+-/, `-${index}-`);
+                        });
+                    });
+
                     formCount--;
                     // Обновляем значение поля total_forms при удалении
                     document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value = formCount;  // Исправлено здесь
+                }
+            });
+
+
+            // для шагов
+            // Удаление формы при нажатии на "Удалить"
+            stepFormsContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('delete-form-step')) {
+                    e.target.closest('.step-form').remove();
+
+
+                    // Обновляем значения индексов форм
+                    const stepForms = StepFormsContainer.querySelectorAll('.step-form');
+                    stepForms.forEach((form, index) => {
+                        // Обновляем индексы в полях формы
+                        form.querySelectorAll('input, select, textarea').forEach((input) => {
+                            input.name = input.name.replace(/-\d+-/, `-${index}-`);
+                            input.id = input.id.replace(/-\d+-/, `-${index}-`);
+                        });
+                    });
+
+                    formCountStep--;
+                    // Обновляем значение поля total_forms при удалении
+                    document.querySelector('#id_recipe_steps-TOTAL_FORMS').value = formCountStep;  // Исправлено здесь
                 }
             });
         });

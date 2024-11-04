@@ -50,7 +50,7 @@
                             Калории
                         </p>
                         <p class="recipe__card__nutritional-value__description__subtitle">
-                            137.0 кК
+                            {{ recipe.recipe_calories}} кК
                         </p>
                     </div>
                     <div class="recipe__card__nutritional-value__description">
@@ -58,7 +58,7 @@
                             Белки
                         </p>
                         <p class="recipe__card__nutritional-value__description__subtitle">
-                            8.0 г
+                            {{ recipe.recipe_proteins}} г
                         </p>
                     </div>   
                     <div class="recipe__card__nutritional-value__description">
@@ -66,7 +66,7 @@
                             Жиры
                         </p>
                         <p class="recipe__card__nutritional-value__description__subtitle">
-                            4.0 г
+                            {{ recipe.recipe_fats}} г
                         </p>
                     </div>   
                     <div class="recipe__card__nutritional-value__description">
@@ -74,13 +74,13 @@
                             Углеводы
                         </p>
                         <p class="recipe__card__nutritional-value__description__subtitle">
-                            17.0 г
+                            {{ recipe.recipe_carbohydrates}} г
                         </p>
                     </div>                           
                 </div>
                 <div class="recipe__card__nutritional-value__spoiler">
                     <p class="recipe__card__nutritional-value__spoiler__title">
-                        Пищевая ценность на 100г, калорийность рассчитана для сырых продуктов
+                        Пищевая ценность на 100г, калорийность рассчитана для сырых продуктов и носит справочный характер
                     </p>
                 </div>
             </div>
@@ -93,37 +93,43 @@
                 Ингридиенты:
             </h2>
             <div class="recipe__card__ingridients">
-                <div class="recipe__card__ingridient">
-                    {{ recipe.ingridients }}
+
+
+                <div class="recipe__card__ingridient" style="display: flex; flex-direction: column;">
+                    {% for ingridient in ingredients %}
+                        <div>
+                            {{ forloop.counter }}. {{ ingridient.product }}
+                            {{ ingridient.quantity }}
+                            {{ ingridient.unit_of_measurement }}
+                        </div>
+
+
+                    {% endfor %}
                 </div>
-                <!-- <div class="recipe__card__ingridient">
-                    <p class="recipe__card__ingridient__name">Вырезка говядины</p>
-                    <p class="recipe__card__ingridient__name">12 шт.</p>
-                </div> -->
+
+                
             </div>
+            
             <h2 class="recipe__card__cooking-steps__title">
                 Шаги приготовления:
             </h2>
             <div class="recipe__card__cooking-steps">
-                <div class="recipe__card__cooking-steps__step">
-                    <!-- <h2 class="recipe__card__cooking-steps__step__title">
-                        Шаг 1
-                    </h2>
-                    <img src="/img/recipe/recipe-photo.jpg" alt=""> -->
-                    <p class="recipe__card__cooking-steps__step__subtitle">
-                        {{ recipe.cooking_steps }}
-                    </p>
                 </div>
-                <!-- <div class="recipe__card__cooking-steps__step">
-                    <h2 class="recipe__card__cooking-steps__step__title">
-                        Шаг 1
-                    </h2>
-                    <img src="/img/recipe/recipe-photo.jpg" alt="">
-                    <p class="recipe__card__cooking-steps__step__subtitle">
-                        Смешайте 20 мл соевого соуса, 2 г сахара, 5 мл масла и 10 г пасты карри. Замаринуйте 2 крыла индейки в получившемся соусе.
-                    </p>
-                </div> -->
+                {% for step in steps %}
+                    <div class="recipe__card__cooking-steps__step">
+                        <h2 class="recipe__card__cooking-steps__step__title">
+                            Шаг {{ forloop.counter }}
+                        </h2>
+                        <!-- <img src="/img/recipe/recipe-photo.jpg" alt=""> -->
+                        <p class="recipe__card__cooking-steps__step__subtitle">
+                            {{ step.text }}
+                        </p>
+                    </div>
+                {% endfor %}
             </div>
+            <a href="{% url 'lk_page' pk=user.pk %}">
+                Вернуться к рецептам
+            </a>
         </div>
     </section>
 

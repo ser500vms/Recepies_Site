@@ -3,14 +3,14 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import RecipeForm, RecipeIngredientForm
-from .models import Recipe, RecipeIngredient
+from .models import Recipe, RecipeIngredient, RecipeStep
 from django.views.generic import (
     TemplateView, 
     CreateView,
     DeleteView,
     UpdateView,
 )
-from .forms import RecipeForm
+from .forms import RecipeForm, RecipeStepForm
 from decimal import Decimal, ROUND_UP
 
 
@@ -18,6 +18,15 @@ RecipeIngredientFormSet = inlineformset_factory(
     Recipe,
     RecipeIngredient,
     form=RecipeIngredientForm,
+    extra=1,  # Количество пустых форм для добавления ингредиентов по умолчанию
+    can_delete=True  # Позволяет удалять ингредиенты
+)
+
+
+RecipeStepFormSet = inlineformset_factory(
+    Recipe,
+    RecipeStep,
+    form=RecipeStepForm,
     extra=1,  # Количество пустых форм для добавления ингредиентов по умолчанию
     can_delete=True  # Позволяет удалять ингредиенты
 )
@@ -31,6 +40,7 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         # Используем только одну пустую форму для начала
         context['ingredient_formset'] = RecipeIngredientFormSet(queryset=RecipeIngredient.objects.none())
+        context['step_formset'] = RecipeStepFormSet(queryset=RecipeStep.objects.none())
         return context
 
     def form_valid(self, form):
@@ -46,31 +56,91 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
 
         # Создаем и сохраняем формы ингредиентов
         ingredient_formset = RecipeIngredientFormSet(self.request.POST, instance=self.object)
-        if ingredient_formset.is_valid():
+        # if ingredient_formset.is_valid():
+        #     ingredient_formset.save()
+            
+        step_formset = RecipeStepFormSet(self.request.POST, instance=self.object)
+
+        ingredient_valid = ingredient_formset.is_valid()
+        step_valid = step_formset.is_valid()
+
+        # Проверяем, что хотя бы один ингредиент заполнен
+        ingredients_have_data = any(
+            form.cleaned_data.get('product') for form in ingredient_formset.forms if form.cleaned_data
+        )
+
+        # Дополнительная проверка на наличие хотя бы одного заполненного шага
+        steps_have_text = any(
+            form.cleaned_data.get('text') for form in step_formset if form.cleaned_data
+        )
+
+        if ingredient_valid and step_valid and ingredients_have_data and steps_have_text:
             ingredient_formset.save()
+            step_formset.save()
+
+
+            # Подсчет калорий для рецепта
+            total_calories = 0
+            total_fats = 0
+            total_carbohydrates = 0
+            total_proteins = 0
+            for ingredient_form in ingredient_formset:
+                # Проверка, что product и quantity присутствуют в cleaned_data
+                if 'product' in ingredient_form.cleaned_data and 'quantity' in ingredient_form.cleaned_data:
+                    product = ingredient_form.cleaned_data['product']
+                    quantity = Decimal(ingredient_form.cleaned_data['quantity'])
+                    unit_calories = Decimal(product.calories / 100)  # калорийность продукта на единицу измерения
+                    unit_fats = Decimal(product.fats / 100)
+                    unit_carbohydrates = Decimal(product.carbohydrates / 100)
+                    unit_proteins = Decimal(product.proteins / 100)  
+
+                    # Подсчет общей калорийности на основе количества
+                    ingredient_calories = (quantity * unit_calories).quantize(Decimal('0.01'), rounding=ROUND_UP)
+                    total_calories += ingredient_calories
+                    ingredient_fats = (quantity * unit_fats)
+                    total_fats += ingredient_fats
+                    ingredient_carbohydrates = (quantity * unit_carbohydrates)
+                    total_carbohydrates += ingredient_carbohydrates
+                    ingredient_proteins = (quantity * unit_proteins)
+                    total_proteins += ingredient_proteins
+
+
+            self.object.recipe_calories = total_calories
+            self.object.recipe_fats = total_fats
+            self.object.recipe_carbohydrates = total_carbohydrates
+            self.object.recipe_proteins = total_proteins
+            self.object.save()
 
             return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
         else:
+            # Добавляем ошибки, если нет заполненного ингредиента или шага
+            if not ingredients_have_data:
+                ingredient_formset.non_form_errors().append("Необходимо добавить хотя бы один ингредиент.")
+            if not steps_have_text:
+                step_formset.non_form_errors().append("Необходимо добавить хотя бы один шаг рецепта.")
             return self.render_to_response(
-                self.get_context_data(form=form, ingredient_formset=ingredient_formset)
+                self.get_context_data(form=form, ingredient_formset=ingredient_formset, step_formset=step_formset)
             )
         
 
     def form_invalid(self, form):
         # Если форма рецепта не валидна, возвращаем ошибочный контекст
         ingredient_formset = RecipeIngredientFormSet(self.request.POST)
+        step_formset = RecipeStepFormSet(self.request.POST)
         return self.render_to_response(
-            self.get_context_data(form=form, ingredient_formset=ingredient_formset)
-        )
+                self.get_context_data(form=form, ingredient_formset=ingredient_formset, step_formset=step_formset)
+            )
       
-
 class RecipeView(TemplateView):
     template_name = "recipiesapp/recipe.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs.get('pk')  # Получаем pk из URL
-        context['recipe'] = get_object_or_404(Recipe, pk=pk)  # Получаем рецепт по pk
+        recipe = get_object_or_404(Recipe, pk=pk)  # Получаем рецепт по pk
+        context['recipe'] = recipe
+        context['ingredients'] = RecipeIngredient.objects.filter(recipe=recipe)
+        context['steps'] = RecipeStep.objects.filter(recipe=recipe)
         return context
 
 
@@ -86,7 +156,7 @@ class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Recipe
-    fields = ["name", "short_description", "categories", "image", "cooking_time", "quantity_of_servings", "cooking_steps"]
+    fields = ["name", "short_description", "categories", "image", "cooking_time", "quantity_of_servings"]
     template_name = "recipiesapp/recipe_update_form.html"
 
     def form_valid(self, form):
@@ -109,24 +179,56 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             # Сохранение формсета после валидации и добавления id
             ingredient_formset.save()
 
+        # Инициализируем формсет шагов
+        step_formset = RecipeStepFormSet(self.request.POST, instance=self.object)
+
+        # Проверка валидности формсета шагов
+        if step_formset.is_valid():
+
+            # Проверяем наличие id для существующих объектов
+            for step_form in step_formset:
+                if not step_form.cleaned_data.get("id") and step_form.instance.pk:
+                    step_form.cleaned_data["id"] = step_form.instance.pk
+
+            # Сохранение формсета после валидации и добавления id
+            step_formset.save()
+
+
+
+            
+
+
+
             # Подсчет калорий для рецепта
             total_calories = 0
+            total_fats = 0
+            total_carbohydrates = 0
+            total_proteins = 0
             for ingredient_form in ingredient_formset:
                 # Проверка, что product и quantity присутствуют в cleaned_data
                 if 'product' in ingredient_form.cleaned_data and 'quantity' in ingredient_form.cleaned_data:
                     product = ingredient_form.cleaned_data['product']
                     quantity = Decimal(ingredient_form.cleaned_data['quantity'])
                     unit_calories = Decimal(product.calories / 100)  # калорийность продукта на единицу измерения
+                    unit_fats = Decimal(product.fats / 100)
+                    unit_carbohydrates = Decimal(product.carbohydrates / 100)
+                    unit_proteins = Decimal(product.proteins / 100)  
 
                     # Подсчет общей калорийности на основе количества
                     ingredient_calories = (quantity * unit_calories).quantize(Decimal('0.01'), rounding=ROUND_UP)
                     total_calories += ingredient_calories
-
-                    # Вывод информации по каждому ингредиенту
-                    print(f"Ингредиент: {product.name}, Количество: {quantity}, Калорийность на единицу: {unit_calories}, Общая калорийность: {ingredient_calories}")
+                    ingredient_fats = (quantity * unit_fats)
+                    total_fats += ingredient_fats
+                    ingredient_carbohydrates = (quantity * unit_carbohydrates)
+                    total_carbohydrates += ingredient_carbohydrates
+                    ingredient_proteins = (quantity * unit_proteins)
+                    total_proteins += ingredient_proteins
 
 
             self.object.recipe_calories = total_calories
+            self.object.recipe_fats = total_fats
+            self.object.recipe_carbohydrates = total_carbohydrates
+            self.object.recipe_proteins = total_proteins
             self.object.save()
 
             # Сохраняем выбранные категории
@@ -143,7 +245,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                     print(f"Поле 'id' формы ингредиента {i}: значение = {f['id'].value()}")
 
             return self.render_to_response(
-                self.get_context_data(form=form, ingredient_formset=ingredient_formset)
+                self.get_context_data(form=form, ingredient_formset=ingredient_formset, step_formset=step_formset)
             )
 
 
@@ -155,6 +257,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['ingredient_formset'] = RecipeIngredientFormSet(instance=self.object)  # Подключаем formset ингредиентов
         context['selected_categories'] = self.object.categories.values_list('id', flat=True)
+        context['step_formset'] = RecipeStepFormSet(instance=self.object)
         return context
 
     def form_invalid(self, form):

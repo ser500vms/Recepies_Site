@@ -279,10 +279,39 @@
             - [x] Добавил файлы в git - git add .
             - [x] Сделал commit - git commit -m "Done count calories fuunction and fix recipe update"
 
-          - *Добавить поля шаги рецептов, динамически добавляемыми, по аналогии с продуктами*
+          - *Сделать подсчет белков, жиров, углеводов в блоке рецепта исходя из лежащих в нем ингридиентов*
+            - [x] В файле recipe_site/recipiesapp/views.py изменил класс AddRecipeView и RecipeUpdateView. Добавил подсчет калорий, белков, жиров, углеводов.
+            - [x] В файле recipe_site/recipiesapp/models.py изменил модель Recipe. Добавил поля для жиров, белков, углеводов.
+            - [x] В файле recipe_site/recipiesapp/admin.py изменил отображение RecipeAdmin, добавил поля для белков, жиров, углеводов.
+            - [x] Доработал шаблоны recipe_site/templates/recipeapp/recipe.html,  recipe_site/templates/usersapp/account-page.html и recipe_site/templates/base.html. Настроил вывод КБЖУ и ингридиентов.      
 
+          - *Добавить поля шаги рецептов, динамически добавляемыми, по аналогии с продуктами*
+            - [x] В файле recipe_site/recipiesapp/models.py изменил модель Recipe. Удалил поле cooking_steps. 
+            - [x] В файле recipe_site/recipiesapp/models.py создал модель RecipeStep для шагов рецепта.
+            - [x] В файле recipe_site/recipiesapp/admins.py изменил RecipeAdmin. Удалил поле cooking_steps и добавил 
+            inlines = [RecipeStepsline] для работы с шагами рецепта.
+            - [x] В файле recipe_site/recipiesapp/admins.py подключил модель RecipeStep - RecipeStepientAdmin(admin.ModelAdmin).
+            - [x] В файле recipe_site/recipiesapp/forms.py создал форму RecipeStepForm(forms.ModelForm) для шагов рецепта
+            - [x] В файле recipe_site/recipiesapp/forms.py создал форму RecipeStepForm(forms.ModelForm) для шагов рецепта
+            - [x] В файле recipe_site/recipiesapp/forms.py из формы RecipeForm удалил поле cooking_steps.
+            - [x] В файле recipe_site/recipiesapp/views.py изменил класс AddRecipeView и RecipeUpdateView. Добавил обработку шагов рецепта.
+            - [x] Доработал шаблоны recipe_site/templates/recipeapp/recipe.html,  recipe_site/templates/usersapp/account-page.html и recipe_site/templates/base.html. Настроил отображение шагов рецепта. 
+            - [x] В ходе тестирования, выяснилось, что при удалении ингридиентов из середины списка или начала, удаление происходит некоректно. Доработал шаблоны recipe_site/templates/recipeapp/add-recipe.html и recipe_update_form.html. Проблема заключалась в непередачи префиксов удаляемых элементов, переаботал скрипт и шаблон.
+            - [x] Произвел тестирование функционала добавления и редактирования с различными условиями.
+            - [x] Добавил файлы в git - git add .
+            - [x] Сделал commit - git commit -m "Done ingridient step and fix recipe add/update function"                     
 
             - *TO DO*
+
+            - Добавить во все шаблоны рецепта отображение калорийности из базы  
+
+              - Не нравиться что для удаления ингридиента я использую скрытые чекбоксы и скрываю ингридиенты вместо удаления их из дом дерева. Надо продумать, чтобы это все было на бэке в вью классе.
+
+              - Добавить плавные переходы по страницам
+
+
+
+
               - middlewere !!
 
 

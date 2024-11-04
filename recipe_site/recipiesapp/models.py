@@ -31,7 +31,9 @@ class Recipe(models.Model):
     cooking_time = models.PositiveIntegerField(blank=False)
     quantity_of_servings = models.PositiveIntegerField(default=1, blank=False)
     recipe_calories = models.PositiveIntegerField(blank=True, null=True)
-    cooking_steps = models.TextField(blank=False)
+    recipe_fats = models.DecimalField(blank=True, null=True, max_digits=6, decimal_places=2)
+    recipe_carbohydrates = models.DecimalField(blank=True, null=True, max_digits=6, decimal_places=2)
+    recipe_proteins = models.DecimalField(blank=True, null=True, max_digits=6, decimal_places=2)
     creation_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
 
@@ -61,20 +63,27 @@ class Product(models.Model):
 class RecipeIngredient(models.Model):
 
     MEASUREMENT_CHOICES = {
-    "GR": "Гр",
-    "ML": "Мл",
-    "TIS": "ч.л",
-    "TS": "с.л",
-    "T": "Шт",
-    "OT": "По вкусу",
+    "Гр": "Гр",
+    "Мл": "Мл",
+    "Ч.л": "Ч.л",
+    "С.л": "С.л",
+    "Шт": "Шт",
+    "По вкусу": "По вкусу",
 }
     
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_ingredients')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity =  models.DecimalField(max_digits=6, decimal_places=2)
-    unit_of_measurement = models.CharField(max_length=3, choices=MEASUREMENT_CHOICES)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=False) # подумать каскад или сет нал
+    quantity =  models.DecimalField(max_digits=6, decimal_places=2, blank=False)
+    unit_of_measurement = models.CharField(max_length=8, choices=MEASUREMENT_CHOICES, blank=False)
     creation_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.quantity} {self.get_unit_of_measurement_display()} {self.product.name} для {self.recipe.name}"
+    
+
+class RecipeStep(models.Model):
+    text = models.TextField(blank=False)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_steps')
+    creation_time = models.DateTimeField(auto_now_add=True)
+    update_time = models.DateTimeField(auto_now=True)

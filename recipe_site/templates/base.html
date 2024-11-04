@@ -150,7 +150,7 @@
                                         Калории
                                     </p>
                                     <p class="recipes-preview__card__nutritional-value__description__subtitle">
-                                        137.0 кК
+                                        {{ recipe.recipe_calories}} кК
                                     </p>
                                 </div>
                                 <div class="recipes-preview__card__nutritional-value__description">
@@ -158,7 +158,7 @@
                                         Белки
                                     </p>
                                     <p class="recipes-preview__card__nutritional-value__description__subtitle">
-                                        8.0 г
+                                        {{ recipe.recipe_proteins}} г
                                     </p>
                                 </div>   
                                 <div class="recipes-preview__card__nutritional-value__description">
@@ -166,7 +166,7 @@
                                         Жиры
                                     </p>
                                     <p class="recipes-preview__card__nutritional-value__description__subtitle">
-                                        4.0 г
+                                        {{ recipe.recipe_fats}} г
                                     </p>
                                 </div>   
                                 <div class="recipes-preview__card__nutritional-value__description">
@@ -174,13 +174,13 @@
                                         Углеводы
                                     </p>
                                     <p class="recipes-preview__card__nutritional-value__description__subtitle">
-                                        17.0 г
+                                        {{ recipe.recipe_carbohydrates}} г
                                     </p>
                                 </div>                           
                             </div>
                             <div class="recipes-preview__card__nutritional-value__spoiler">
                                 <p class="recipes-preview__card__nutritional-value__spoiler__title">
-                                    Пищевая ценность на 100г, калорийность рассчитана для сырых продуктов
+                                    Пищевая ценность на 100г, калорийность рассчитана для сырых продуктов и носит справочный характер
                                 </p>
                             </div>
                         </div>

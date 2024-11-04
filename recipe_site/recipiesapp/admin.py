@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Recipe, Category, Product, RecipeIngredient# устанавливаем связь с моделями, которые мы хотим отобразить
+from .models import Recipe, Category, Product, RecipeIngredient, RecipeStep# устанавливаем связь с моделями, которые мы хотим отобразить
 from mptt.admin import MPTTModelAdmin
-from .forms import RecipeIngredientForm
 
 # Register your models here.
 
@@ -12,7 +11,12 @@ class CategoryInline(admin.TabularInline):
 
 class RecipeIngridientsline(admin.TabularInline):
     model = RecipeIngredient
-    extra = 1
+    extra = 0
+
+
+class RecipeStepsline(admin.TabularInline):
+    model = RecipeStep
+    extra = 0
 
 
 @admin.register(Recipe) # Этим декаратором мы регистрируем модель
@@ -20,6 +24,7 @@ class RecipeAdmin(admin.ModelAdmin):
     inlines = [
         CategoryInline,
         RecipeIngridientsline,
+        RecipeStepsline,
     ]
 
     list_display = [
@@ -29,8 +34,10 @@ class RecipeAdmin(admin.ModelAdmin):
         'image', 
         'cooking_time', 
         'quantity_of_servings',
-        'cooking_steps',
         'recipe_calories',
+        'recipe_fats',
+        'recipe_carbohydrates',
+        'recipe_proteins',
         'creation_time',
         'update_time',
         ] # тут мы добавляем колонки, которые хотим отоборазить
@@ -48,12 +55,20 @@ class RecipeAdmin(admin.ModelAdmin):
                 'fields': ['name', 'author', 'short_description', 'image'],
             },
         ),
-                (
+        (
             'Recipe body', 
             {
                 'classes': ['wide'],
                 'description': 'Main info',
-                'fields': ['recipe_calories', 'cooking_time', 'quantity_of_servings', 'cooking_steps'],
+                'fields': ['cooking_time', 'quantity_of_servings'],
+            },
+        ),
+        (
+            'Recipe КБЖУ', 
+            {
+                'classes': ['wide'],
+                'description': 'Main info',
+                'fields': ['recipe_calories', 'recipe_fats', 'recipe_carbohydrates', 'recipe_proteins'],
             },
         ),
 
@@ -132,6 +147,29 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
                 'classes': ['wide'],
                 'description': 'Main info',
                 'fields': ['recipe', 'product', 'quantity', 'unit_of_measurement'],
+            },
+        ),
+    ]
+
+
+@admin.register(RecipeStep)
+class RecipeStepientAdmin(admin.ModelAdmin):
+    list_display = [
+        'id', 
+        'recipe', 
+        'text', 
+        ] 
+    search_fields = ['recipe'] # это для добавления поиска
+    search_help_text = 'Поиск по имени или цене продукта' # это описание поиска
+    readonly_fields = ['creation_time', 'update_time']
+
+    fieldsets = [
+        (
+            'Recipe info', 
+            {
+                'classes': ['wide'],
+                'description': 'Main info',
+                'fields': ['recipe', 'text'],
             },
         ),
     ]
