@@ -9,8 +9,8 @@ from django.views.generic import (
     ListView
 )
 from .form import CustomUserForm
-from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, 
     UserPassesTestMixin
@@ -51,6 +51,7 @@ class HomeView(ListView):
         context['categories'] = Category.objects.all()  # Передаем все категории в контекст
         return context
 
+
 class AboutUserView(LoginRequiredMixin, TemplateView):
     template_name = "pages/about-user.html"
     login_url = reverse_lazy('login')
@@ -73,11 +74,10 @@ class LkView(LoginRequiredMixin, ListView):
 class RegistrationView(CreateView):
     form_class = CustomUserForm
     template_name = "pages/registration.html"
-    success_url = reverse_lazy("lk_page")
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        # User.objects.create(user=self.object)
+
 
         username = form.cleaned_data.get("username")
         password = form.cleaned_data.get("password1")
@@ -89,11 +89,15 @@ class RegistrationView(CreateView):
         login(request=self.request, user=user)
 
         return response
+    
+    def get_success_url(self):
+        return reverse_lazy('lk_page', kwargs={'pk': self.object.pk})
 
 
 class MyLoginView(LoginView):
     form_class = AuthenticationForm
     template_name = "pages/enter-page.html"
+    
     
     def get_success_url(self):
         return reverse_lazy('lk_page', kwargs={'pk': self.request.user.pk})
@@ -133,6 +137,23 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     # Возвращаем текущего пользователя
         return self.request.user  
   
+    def test_func(self):
+    # Позволяем редактировать только собствен данные        
+        return self.request.user == self.get_object()
+
+
+class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView, UserPassesTestMixin):
+    form_class = PasswordChangeForm
+    template_name = 'pages/user_password_change_form.html'
+    success_url = reverse_lazy('user_info')  # перенаправление после успешного изменения пароля
+
+    def get_success_url(self):
+        return reverse_lazy('user_info', kwargs={'pk': self.request.user.pk})
+    
+    def get_object(self, queryset=None):
+    # Возвращаем текущего пользователя
+        return self.request.user  
+    
     def test_func(self):
     # Позволяем редактировать только собствен данные        
         return self.request.user == self.get_object()

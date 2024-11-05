@@ -301,7 +301,6 @@
             - [x] Добавил файлы в git - git add .
             - [x] Сделал commit - git commit -m "Done ingridient step and fix recipe add/update function"
 
-05.11.24:
           - *Установить ограничения по размерам загружаемых файлов и их разрешению*
             - [x] В файле recipe_site/recipiesapp/forms.py создал метод  validate_file(file: InMemoryUploadedFile) -> None, в котором установил ограничение на размер файла, до 1 Мб.
             - [x] В файле recipe_site/recipiesapp/forms.py добавил в форму RecipeForm - image = forms.ImageField(validators=[validate_file]) для проверки размера файла
@@ -311,11 +310,46 @@
             - [x] Добавил файлы в git - git add .
             - [x] Сделал commit - git commit -m "Done image load update"
 
-          - *Улучшшение usersapp функционала*
-            - Нужно сделать функционал смены пароля 
-            - Нужно сделать функционал поля емеил обязательным
-            - Нужно сделать функционал регистрации по нику или емайлу 
-            - Нужно сделать функционал восстановления пароля
+          - *Улучшшение usersapp функционала* (На заметку, по смене пароля надо изучить ту же схему что и с восстановлением)
+            - [x] В файле recipe_site/usersapp/views.py создал представление UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView, UserPassesTestMixin) для изменения пароля
+            - [x] Создал шаблон recipe_site/templates/pages/user_password_change_form.html для изменения пароля
+            - [x] В файле recipe_site/usersapp/urls.py прописал пути для работы UserPasswordChangeView
+            - [x] В шаблоне recipe_site/templates/pages/user_update_form.html добавил ссылку для смены пароля
+            - [x] Проверил функционал смены пароля
+            - [x] В файле recipe_site/usersapp/views.py доработал представление RegistrationView, была проблема с переадресацие, добавил def get_success_url
+            - [x] В файле recipe_site/usersapp/forms.py доработал форму CustomUserForm, добавил email = forms.EmailField, чтобы поле с почтой было обязательным
+            - [x] Проверил функционал смены пароля
+            - [x] Создал шаблон recipe_site/templates/pages/password_reset_form.html для формы смены пароля
+            - [x] Создал шаблон recipe_site/templates/pages/password_reset_done.html для вывода сообщения об отправке ссылки на восстановление на почту
+            - [x] Создал шаблон recipe_site/templates/pages/password_reset_confirm.html для вывода формы для нового пароля, при переходе по ссылке из письма
+            - [x] Создал шаблон recipe_site/templates/pages/password_reset_complete.html для вывода сообщения об успешной смене пароля
+            - [x] Создал шаблон recipe_site/templates/pages/password_reset_email.html в котором генерируеться отправляемое сообщение на почту
+            - [x] Вся логика восстановления пароля основана на базовых классах from django.contrib.auth.views import(PasswordResetDoneView, PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView)
+            - [x] В файле recipe_site/usersapp/urls.py прописал путь с которого начинаеться работа по смене пароля и генерируется отправляемое сообщение на почту
+                  path('password-reset/', PasswordResetView.as_view(
+                  template_name='pages/password_reset_form.html',
+                  email_template_name='pages/password_reset_email.html',
+                  success_url=reverse_lazy("password_reset_done")
+                  ), name='password_reset'),
+            - [x] В файле recipe_site/usersapp/urls.py прописал путь для вывода сообщения об отправке ссылки на восстановление на почту
+                  path('password-reset/done/', PasswordResetDoneView.as_view(template_name='pages/password_reset_done.html'), name='password_reset_done') 
+            - [x] В файле recipe_site/usersapp/urls.py прописал путь для вывода формы для нового пароля, при переходе по ссылке из письма
+                  path('password-reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(
+                          template_name='pages/password_reset_confirm.html',
+                          success_url=reverse_lazy("password_reset_complete")
+                          ), name='password_reset_confirm'),
+            - [x] В файле recipe_site/usersapp/urls.py прописал путь для вывода формы для нового пароля, при переходе по ссылке из письма
+                  path('password-reset/complete/', PasswordResetCompleteView.as_view(
+                          template_name='pages/password_reset_complete.html',
+                          ), name='password_reset_complete'),
+            - [x] В файле recipe_site/settings/settings.py прописал - EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' для того, чтоб сообщения отправлялись в терминал т.к. SMPT сервер не настроен.
+            - [x] Проверил работу по восстановлению пароля
+            - [x] Добавил файлы в git - git add .
+            - [x] Сделал commit - git commit -m "Done change adn restore password"
+
+
+<!-- 06.11.24 -->
+
 
           - *Доработка recipiesapp функционала* 
             - Найти базу данных с продкутами и заполнить свою
@@ -332,7 +366,7 @@
 
             - cooking time вывести подсказку, вводить только секунды, вывести формулу, свыше 60 секунд пишем 1 час 1 секунда. 
 
-06.11.24
+
           - *Стилизация*
               - Добавить плавные переходы по страницам
               - account-page.html:
@@ -358,7 +392,7 @@
             - *Настройка куки*
 
 08.11.24 - *Деплой*
-
+            - не забыть посмотреть как настроить смпт сервер для отправки писем при восстановлении паролей.
 
             - После деплоя:
               - *Добавить в фильтр блок для алергиков, который будет брать список продуктов в качестве чкубоксов и выводить рецепты в которых отсутствуют выбранные продукты*
@@ -372,6 +406,7 @@
               - *Продумать по страницам с добавлением и изменениям рецептов, может можно улучшить скрипт или шаблоны. Задача, на после деплоя*
               - *Настройка сессий*
               - *Не нравиться что для удаления ингридиента я использую скрытые чекбоксы и скрываю ингридиенты вместо удаления их из дом дерева. Надо продумать, чтобы это все было на бэке в вью классе*
+              - Нужно сделать функционал регистрации по нику или емайлу 
 
                 
 

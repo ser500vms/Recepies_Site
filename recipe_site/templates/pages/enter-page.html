@@ -8,33 +8,42 @@
         <form method="post" class="login-page__form" novalidate>
 
             {% csrf_token %}
+            {{ form.non_field_errors }}
 
             <h2 class="login-page__title">Вход в личный кабинет</h2>
 
-            {% for field in form %}
-                <div class="login-page__form__content">
-                    <p class="login-page__form__content__label">
-                        {{ field.label_tag }}                        
-                    </p>
-                    <p class="login-page__form__content__input">
-                        {{ field }}                    
-                    </p>
-                </div>
-                {% if field.errors %}
-                    <small class="login-page__form__content__small">{{ field.errors|striptags }}</small> 
-                {% endif %}
-            {% endfor %}
+            <div class="login-page__form__content">
+                <label for="id_username" class="login-page__form__content__label">
+                    Логин:
+                </label>
+                <p class="login-page__form__content__input">
+                    {{ form.username }}
+                </p>
+                <p class="login-page__form__content__input">
+                    {{ form.username.errors }}
+                </p>
+            </div>
+            <div class="login-page__form__content">
+                <label for="id_username" class="login-page__form__content__label">
+                    Пароль:
+                </label>
+                <p class="login-page__form__content__input">
+                    {{ form.password }}
+                </p>
+                <p class="login-page__form__content__input">
+                    {{ form.password.errors }}
+                </p>
+            </div>
             <button type="submit" class="login-page__form__submit-button">
                 Войти
             </button>
-            {% if form.non_field_errors %}
-            <div class="login-page__form__wrong-data">
-                    <p class="login-page__form__wrong-data__subtitle">
-                        Подьзователь с таким именем и паролем не найден, убедитесь в правильности ввода данных.
-                    </p>
-            </div>
-            {% endif %}   
-            <p class="login-page__form__reset-link">Забыли пароль? <a href="#">Сбросить пароль</a></p>
+
+
+            <p class="login-page__form__reset-link">
+                Забыли пароль? 
+                
+                <a href="{% url 'password_reset' %}">Сбросить пароль</a>
+            </p>
             <p class="login-page__form__create-link">Еще нет аккаунта? <a href="{% url 'registration_page' %}">Зарегестрироваться</a></p>
                    
 
