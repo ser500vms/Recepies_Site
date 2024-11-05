@@ -1,8 +1,22 @@
+from django.utils import timezone
+import os
+from uuid import uuid4
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
 
 # Create your models here.
+
+
+def recipe_image_upload_path(instance, filename):
+    # Получаем текущий год
+    timestamp = timezone.now().strftime('%Y_%m_%d_%H_%M_%S')
+    # Получаем расширение оригинального файла
+    extension = os.path.splitext(filename)[1]
+    # Генерируем уникальное имя файла с годом и уникальным идентификатором
+    new_filename = f"{instance.author.username}_{timestamp}_{uuid4().hex}{extension}"
+    # Возвращаем путь сохранения
+    return os.path.join('users_recipes_img', new_filename)
 
 
 class Category(MPTTModel):
@@ -27,7 +41,7 @@ class Recipe(models.Model):
     short_description = models.CharField(max_length=200, blank=False)
     categories = models.ManyToManyField(Category, related_name='recipe', blank=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    image = models.ImageField(upload_to='users_recipes_img', blank=False)
+    image = models.ImageField(upload_to=recipe_image_upload_path, blank=False)
     cooking_time = models.PositiveIntegerField(blank=False)
     quantity_of_servings = models.PositiveIntegerField(default=1, blank=False)
     recipe_calories = models.PositiveIntegerField(blank=True, null=True)

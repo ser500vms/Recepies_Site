@@ -2,17 +2,25 @@
 
     <form  method="post" enctype="multipart/form-data">
         {% csrf_token %}
+
+        {{ form.non_field_errors }} <!-- Для ошибок формы -->
+
         {{ form.name.label }} {{ form.name }}
+
         <br>
         <br>
 
         {{ form.image.label }} {{ form.image }}
+        {{ form.image.errors }}
         <br>
         <br>
 
         {{ form.short_description.label }} {{ form.short_description }}
+
         <br>
         <br>
+
+        <!-- Категории -->
 
         <div>
             {{ form.categories.label }}<br>
@@ -25,8 +33,14 @@
                             name="categories" 
                             value="{{ subcategory.id }}" 
                             id="category_{{ subcategory.id }}"
+                            {% if subcategory.id in selected_categories %}
+                                checked 
+                            {% endif %}
+                            
                         />
-                        <label for="category_{{ subcategory.id }}">{{ subcategory.name }}</label><br>
+                        <label for="category_{{ subcategory.id }}">
+                            {{ subcategory.name }}
+                        </label><br>
                     {% endfor %}
                 {% endif %}
             {% endfor %}
@@ -45,6 +59,7 @@
             {% for form in ingredient_formset %}
                 <div class="ingredient-form">
                     {{ form.product.label }} {{ form.product }}
+
                     <br><br>
         
                     {{ form.quantity.label }} {{ form.quantity }}
@@ -52,6 +67,9 @@
         
                     {{ form.unit_of_measurement.label }} {{ form.unit_of_measurement }}
                     <br><br>
+                    <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
+
+                    <button type="button" class="delete-form">Удалить ингредиент</button>
                 </div>
             {% endfor %}
         </div>
@@ -67,7 +85,7 @@
         
                 {{ ingredient_formset.empty_form.unit_of_measurement.label }} {{ ingredient_formset.empty_form.unit_of_measurement }}
                 <br><br>
-        
+                <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
                 <button type="button" class="delete-form">Удалить ингредиент</button>
             </div>
         </div>
@@ -82,6 +100,8 @@
                 <div class="step-form">
                     {{ form.text.label }} {{ form.text }}
                     <br><br>
+
+                    <button type="button" class="delete-step-form">Удалить шаг</button>
                 </div>
             {% endfor %}
         </div>
@@ -91,7 +111,8 @@
             <div class="step-form">
                 {{ step_formset.empty_form.text.label }} {{ step_formset.empty_form.text }}
                 <br><br>
-            <button type="button" class="delete-form-step">Удалить шаг</button>
+
+                <button type="button" class="delete-step-form">Удалить шаг</button>
             </div>
         </div>
         
@@ -120,7 +141,6 @@
             // для шагов
             const stepFormsContainer = document.getElementById('step-forms');
             const stepTemplate = document.querySelector('.step-form-template').cloneNode(true);
-            console.log(stepTemplate);
             stepTemplate.style.display = 'block';
 
             let totalFormsStepInput = document.querySelector('#id_recipe_steps-TOTAL_FORMS');
@@ -171,6 +191,9 @@
                     e.target.closest('.ingredient-form').remove();
 
 
+
+
+
                     // Обновляем значения индексов форм
                     const forms = ingredientFormsContainer.querySelectorAll('.ingredient-form');
                     forms.forEach((form, index) => {
@@ -191,7 +214,7 @@
             // для шагов
             // Удаление формы при нажатии на "Удалить"
             stepFormsContainer.addEventListener('click', function (e) {
-                if (e.target.classList.contains('delete-form-step')) {
+                if (e.target.classList.contains('delete-step-form')) {
                     e.target.closest('.step-form').remove();
 
 

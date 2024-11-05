@@ -12,6 +12,7 @@ from django.views.generic import (
 )
 from .forms import RecipeForm, RecipeStepForm
 from decimal import Decimal, ROUND_UP
+from django.core.exceptions import ValidationError
 
 
 RecipeIngredientFormSet = inlineformset_factory(
@@ -39,28 +40,26 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Используем только одну пустую форму для начала
-        context['ingredient_formset'] = RecipeIngredientFormSet(queryset=RecipeIngredient.objects.none())
-        context['step_formset'] = RecipeStepFormSet(queryset=RecipeStep.objects.none())
+        context['ingredient_formset'] = RecipeIngredientFormSet(self.request.POST or None)
+        context['step_formset'] = RecipeStepFormSet(self.request.POST or None)
+        selected_categories = self.request.POST.getlist('categories') if self.request.method == 'POST' else []
+        print('get')
+        print(selected_categories)
+        context['selected_categories'] = [int(category) for category in selected_categories]
+        
         return context
 
-    def form_valid(self, form):
-        # Сохраняем рецепт
-        self.object = form.save(commit=False)
-        self.object.author = self.request.user
-        self.object.save()
 
-        # Привязываем и сохраняем категории рецепта
-        categories = form.cleaned_data.get('categories')
-        if categories:
-            self.object.categories.set(categories)
+    def form_valid(self, form):
+        print('Valid start')
+        print("POST data:", self.request.POST)
 
         # Создаем и сохраняем формы ингредиентов
-        ingredient_formset = RecipeIngredientFormSet(self.request.POST, instance=self.object)
-        # if ingredient_formset.is_valid():
-        #     ingredient_formset.save()
+        ingredient_formset = RecipeIngredientFormSet(self.request.POST)
             
-        step_formset = RecipeStepFormSet(self.request.POST, instance=self.object)
+        step_formset = RecipeStepFormSet(self.request.POST)
 
+        form_valid = form.is_valid()
         ingredient_valid = ingredient_formset.is_valid()
         step_valid = step_formset.is_valid()
 
@@ -74,8 +73,23 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
             form.cleaned_data.get('text') for form in step_formset if form.cleaned_data
         )
 
-        if ingredient_valid and step_valid and ingredients_have_data and steps_have_text:
+        if form_valid and ingredient_valid and step_valid and ingredients_have_data and steps_have_text:
+            print("Valid")
+            # Сохраняем рецепт
+            self.object = form.save(commit=False)
+            self.object.author = self.request.user
+            self.object.save()
+
+            # Привязываем и сохраняем категории рецепта
+            categories = form.cleaned_data.get('categories')
+            if categories:
+                self.object.categories.set(categories)
+
+
+            ingredient_formset.instance = self.object
             ingredient_formset.save()
+
+            step_formset.instance = self.object
             step_formset.save()
 
 
@@ -113,23 +127,35 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
 
             return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
         else:
+            print("Not valid")
             # Добавляем ошибки, если нет заполненного ингредиента или шага
             if not ingredients_have_data:
                 ingredient_formset.non_form_errors().append("Необходимо добавить хотя бы один ингредиент.")
+                print("Error added: No ingredients found.")
             if not steps_have_text:
                 step_formset.non_form_errors().append("Необходимо добавить хотя бы один шаг рецепта.")
-            return self.render_to_response(
-                self.get_context_data(form=form, ingredient_formset=ingredient_formset, step_formset=step_formset)
-            )
+                print("Error added: No steps found.")
+
+            return self.form_invalid(form)
         
 
     def form_invalid(self, form):
         # Если форма рецепта не валидна, возвращаем ошибочный контекст
+        print('Сработала функция инвалид')
+        print("POST data:", self.request.POST)
+
         ingredient_formset = RecipeIngredientFormSet(self.request.POST)
         step_formset = RecipeStepFormSet(self.request.POST)
+        selected_categories = self.request.POST.getlist('categories')
+        print(selected_categories)
+
+
         return self.render_to_response(
-                self.get_context_data(form=form, ingredient_formset=ingredient_formset, step_formset=step_formset)
-            )
+            self.get_context_data(form=form, 
+                                   ingredient_formset=ingredient_formset, 
+                                   step_formset=step_formset,
+                                   selected_categories=selected_categories)
+        )
       
 class RecipeView(TemplateView):
     template_name = "recipiesapp/recipe.html"
