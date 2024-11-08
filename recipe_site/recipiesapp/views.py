@@ -1,9 +1,10 @@
 from django.forms import inlineformset_factory
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .forms import RecipeForm, RecipeIngredientForm
-from .models import Recipe, RecipeIngredient, RecipeStep
+from .forms import ProductForm, RecipeForm, RecipeIngredientForm
+from .models import Category, Product, Recipe, RecipeIngredient, RecipeStep
 from django.views.generic import (
     TemplateView, 
     CreateView,
@@ -12,7 +13,15 @@ from django.views.generic import (
 )
 from .forms import RecipeForm, RecipeStepForm
 from decimal import Decimal, ROUND_UP
-from django.core.exceptions import ValidationError
+from django.db.models import Q
+
+
+# для автозаполнение продуктов, обработка запроса в выпадающем списке
+def product_autocomplete(request):
+    query = request.GET.get('q', '')  # Получаем строку запроса, которую вводит пользователь
+    products = Product.objects.filter(Q(name__icontains=query.lower()) | Q(name__icontains=query.capitalize()))[:5]  # Фильтруем продукты и ограничиваем результат до 5
+    results = [{'id': product.id, 'name': product.name} for product in products]
+    return JsonResponse(results, safe=False)
 
 
 RecipeIngredientFormSet = inlineformset_factory(
@@ -43,16 +52,12 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
         context['ingredient_formset'] = RecipeIngredientFormSet(self.request.POST or None)
         context['step_formset'] = RecipeStepFormSet(self.request.POST or None)
         selected_categories = self.request.POST.getlist('categories') if self.request.method == 'POST' else []
-        print('get')
-        print(selected_categories)
         context['selected_categories'] = [int(category) for category in selected_categories]
         
         return context
 
 
     def form_valid(self, form):
-        print('Valid start')
-        print("POST data:", self.request.POST)
 
         # Создаем и сохраняем формы ингредиентов
         ingredient_formset = RecipeIngredientFormSet(self.request.POST)
@@ -80,6 +85,8 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
             self.object.author = self.request.user
             self.object.save()
 
+
+
             # Привязываем и сохраняем категории рецепта
             categories = form.cleaned_data.get('categories')
             if categories:
@@ -101,8 +108,19 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
             for ingredient_form in ingredient_formset:
                 # Проверка, что product и quantity присутствуют в cleaned_data
                 if 'product' in ingredient_form.cleaned_data and 'quantity' in ingredient_form.cleaned_data:
+                    unit_of_measurement = ingredient_form.cleaned_data['unit_of_measurement']
+
+                    match unit_of_measurement:
+                        case 'Ч.л':
+                            quantity = Decimal(ingredient_form.cleaned_data['quantity'] * 5)
+                        case 'С.л':
+                            quantity = Decimal(ingredient_form.cleaned_data['quantity'] * 15)
+                        case 'По вкусу':
+                            quantity = 0
+                        case _:
+                            quantity = Decimal(ingredient_form.cleaned_data['quantity'])
+                    
                     product = ingredient_form.cleaned_data['product']
-                    quantity = Decimal(ingredient_form.cleaned_data['quantity'])
                     unit_calories = Decimal(product.calories / 100)  # калорийность продукта на единицу измерения
                     unit_fats = Decimal(product.fats / 100)
                     unit_carbohydrates = Decimal(product.carbohydrates / 100)
@@ -117,6 +135,46 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
                     total_carbohydrates += ingredient_carbohydrates
                     ingredient_proteins = (quantity * unit_proteins)
                     total_proteins += ingredient_proteins
+
+
+            # calories category set
+
+            if total_calories < 200:
+                category = Category.objects.get(name='До 200 ккал')
+                self.object.categories.add(category)
+
+            elif total_calories < 400:
+                category = Category.objects.get(name='200 - 400 ккал')
+                self.object.categories.add(category)
+
+            elif total_calories < 400:
+                category = Category.objects.get(name='400 - 600 ккал')
+                self.object.categories.add(category)
+
+            elif total_calories < 800:
+                category = Category.objects.get(name='600 - 800 ккал')
+                self.object.categories.add(category)
+            
+            else:
+                category = Category.objects.get(name='Более 800 ккал')
+                self.object.categories.add(category)
+
+
+            # time set
+            
+            time = form.cleaned_data.get('cooking_time')
+            if time > 60:
+                hour = time // 60
+                minutes = time % 60
+                if minutes == 0:
+                    self.object.cooking_time_text = f'{hour} час'
+                else:
+                    self.object.cooking_time_text = f'{hour} час {minutes} мин'
+            else:
+                self.object.cooking_time_text = f'{time} мин'
+            
+
+
 
 
             self.object.recipe_calories = total_calories
@@ -156,7 +214,8 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
                                    step_formset=step_formset,
                                    selected_categories=selected_categories)
         )
-      
+
+
 class RecipeView(TemplateView):
     template_name = "recipiesapp/recipe.html"
 
@@ -225,7 +284,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 
-            # Подсчет калорий для рецепта
+                       # Подсчет калорий для рецепта
             total_calories = 0
             total_fats = 0
             total_carbohydrates = 0
@@ -233,8 +292,19 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             for ingredient_form in ingredient_formset:
                 # Проверка, что product и quantity присутствуют в cleaned_data
                 if 'product' in ingredient_form.cleaned_data and 'quantity' in ingredient_form.cleaned_data:
+                    unit_of_measurement = ingredient_form.cleaned_data['unit_of_measurement']
+
+                    match unit_of_measurement:
+                        case 'Ч.л':
+                            quantity = Decimal(ingredient_form.cleaned_data['quantity'] * 5)
+                        case 'С.л':
+                            quantity = Decimal(ingredient_form.cleaned_data['quantity'] * 15)
+                        case 'По вкусу':
+                            quantity = 0
+                        case _:
+                            quantity = Decimal(ingredient_form.cleaned_data['quantity'])
+                    
                     product = ingredient_form.cleaned_data['product']
-                    quantity = Decimal(ingredient_form.cleaned_data['quantity'])
                     unit_calories = Decimal(product.calories / 100)  # калорийность продукта на единицу измерения
                     unit_fats = Decimal(product.fats / 100)
                     unit_carbohydrates = Decimal(product.carbohydrates / 100)
@@ -250,6 +320,46 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                     ingredient_proteins = (quantity * unit_proteins)
                     total_proteins += ingredient_proteins
 
+            # Сохраняем выбранные категории
+            form.cleaned_data['categories'] = form.cleaned_data.get('categories')
+            self.object.categories.set(form.cleaned_data['categories'])
+
+
+            if total_calories < 200:
+                category = Category.objects.get(name='До 200 ккал')
+                self.object.categories.add(category)
+
+            elif total_calories < 400:
+                category = Category.objects.get(name='200 - 400 ккал')
+                self.object.categories.add(category)
+
+            elif total_calories < 400:
+                category = Category.objects.get(name='400 - 600 ккал')
+                self.object.categories.add(category)
+
+            elif total_calories < 800:
+                category = Category.objects.get(name='600 - 800 ккал')
+                self.object.categories.add(category)
+            
+            else:
+                category = Category.objects.get(name='Более 800 ккал')
+                self.object.categories.add(category)
+
+
+
+            # time set
+            
+            time = form.cleaned_data.get('cooking_time')
+            if time > 60:
+                hour = time // 60
+                minutes = time % 60
+                if minutes == 0:
+                    self.object.cooking_time_text = f'{hour} час'
+                else:
+                    self.object.cooking_time_text = f'{hour} час {minutes} мин'
+            else:
+                self.object.cooking_time_text = f'{time} мин'
+
 
             self.object.recipe_calories = total_calories
             self.object.recipe_fats = total_fats
@@ -257,9 +367,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             self.object.recipe_proteins = total_proteins
             self.object.save()
 
-            # Сохраняем выбранные категории
-            form.cleaned_data['categories'] = form.cleaned_data.get('categories')
-            self.object.categories.set(form.cleaned_data['categories'])
+
 
             return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
         else:
@@ -293,3 +401,20 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             self.get_context_data(form=form, ingredient_formset=ingredient_formset)
         )
     
+
+class AddProductView(LoginRequiredMixin, CreateView):
+    form_class = ProductForm
+    template_name = "recipiesapp/add_product.html"
+    success_url = reverse_lazy("add_recipe")
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
+
+        return redirect(reverse_lazy("add_recipe"))
+        
+    
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+        

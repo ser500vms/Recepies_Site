@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+
+
+    <form  method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }} <!-- Для ошибок формы -->
+
+        {{ form.name.label }} {{ form.name }}
+
+        <br>
+        <br>
+
+        {{ form.calories.label }} {{ form.calories }}
+        {{ form.calories.errors }}
+        <br>
+        <br>
+
+        {{ form.fats.label }} {{ form.fats }}
+        {{ form.fats.errors }}
+
+        <br>
+        <br>
+
+        {{ form.carbohydrates.label }} {{ form.carbohydrates }}
+        {{ form.carbohydrates.errors }}
+
+        <br>
+        <br>
+
+        {{ form.proteins.label }} {{ form.proteins }}
+        {{ form.proteins.errors }}
+
+        <br>
+        <br>
+        <button type="submit">Добавить продукт</button>
+
+    </form>
+
+    {% endif %}
+
+{% endblock content %}

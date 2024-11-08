@@ -1,240 +1,298 @@
-{% if user.is_authenticated %}
+{% extends "base.html" %}
 
-    <form  method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+{% block content %}
+    {% if user.is_authenticated %}
 
-        {{ form.non_field_errors }} <!-- Для ошибок формы -->
+        <form  method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-        {{ form.name.label }} {{ form.name }}
+            {{ form.non_field_errors }} <!-- Для ошибок формы -->
 
-        <br>
-        <br>
+            {{ form.name.label }} {{ form.name }}
 
-        {{ form.image.label }} {{ form.image }}
-        {{ form.image.errors }}
-        <br>
-        <br>
+            <br>
+            <br>
 
-        {{ form.short_description.label }} {{ form.short_description }}
+            {{ form.image.label }} {{ form.image }}
+            {{ form.image.errors }}
+            <br>
+            <br>
 
-        <br>
-        <br>
+            {{ form.short_description.label }} {{ form.short_description }}
 
-        <!-- Категории -->
+            <br>
+            <br>
 
-        <div>
-            {{ form.categories.label }}<br>
-            {% for category in form.fields.categories.queryset %}
-                {% if not category.parent %} 
-                    <p><strong>{{ category.name }}</strong></p>
-                    {% for subcategory in category.get_children %}
-                        <input 
-                            type="checkbox" 
-                            name="categories" 
-                            value="{{ subcategory.id }}" 
-                            id="category_{{ subcategory.id }}"
-                            {% if subcategory.id in selected_categories %}
-                                checked 
-                            {% endif %}
-                            
-                        />
-                        <label for="category_{{ subcategory.id }}">
-                            {{ subcategory.name }}
-                        </label><br>
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </div>
+            <!-- Категории -->
 
-        {{ form.cooking_time.label }} {{ form.cooking_time }}
-        <br>
-        <br>
+            <div>
+                {{ form.categories.label }}<br>
+                {% for category in form.fields.categories.queryset %}
+                    {% if not category.parent and category.name != 'Калорийность на 100г.' %} 
+                        <p><strong>{{ category.name }}</strong></p>
+                        {% for subcategory in category.get_children %}
+                            <input 
+                                type="checkbox" 
+                                name="categories" 
+                                value="{{ subcategory.id }}" 
+                                id="category_{{ subcategory.id }}"
+                                {% if subcategory.id in selected_categories %}
+                                    checked 
+                                {% endif %}
+                                
+                            />
+                            <label for="category_{{ subcategory.id }}">
+                                {{ subcategory.name }}
+                            </label><br>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
 
-        {{ form.quantity_of_servings.label }} {{ form.quantity_of_servings }}
-        <br>
-        <br>
+            {{ form.cooking_time.label }} {{ form.cooking_time }}
+            <br>
+            <br>
 
-        <div id="ingredient-forms">
-            {{ ingredient_formset.management_form }}
-            {% for form in ingredient_formset %}
+            {{ form.quantity_of_servings.label }} {{ form.quantity_of_servings }}
+            <br>
+            <br>
+
+            <div id="ingredient-forms">
+                {{ ingredient_formset.management_form }}
+                {% for form in ingredient_formset %}
+                    <div class="ingredient-form">
+                        {{ form.product.label }} {{ form.product }}
+
+                        <p>Не нашли продукт?</p>
+                        <a href="{% url 'add_product' %}">Добавить свой продукт</a>
+
+                        <br><br>
+            
+                        {{ form.quantity.label }} {{ form.quantity }}
+                        <br><br>
+            
+                        {{ form.unit_of_measurement.label }} {{ form.unit_of_measurement }}
+                        <br><br>
+                        <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
+
+                        <button type="button" class="delete-form">Удалить ингредиент</button>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Шаблон для новой формы ингредиента (скрыт) -->
+            <div class="ingredient-form-template" style="display: none;">
                 <div class="ingredient-form">
-                    {{ form.product.label }} {{ form.product }}
-
+                    {{ ingredient_formset.empty_form.product.label }} {{ ingredient_formset.empty_form.product }}
                     <br><br>
-        
-                    {{ form.quantity.label }} {{ form.quantity }}
+            
+                    {{ ingredient_formset.empty_form.quantity.label }} {{ ingredient_formset.empty_form.quantity }}
                     <br><br>
-        
-                    {{ form.unit_of_measurement.label }} {{ form.unit_of_measurement }}
+            
+                    {{ ingredient_formset.empty_form.unit_of_measurement.label }} {{ ingredient_formset.empty_form.unit_of_measurement }}
                     <br><br>
                     <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
-
                     <button type="button" class="delete-form">Удалить ингредиент</button>
                 </div>
-            {% endfor %}
-        </div>
-        
-        <!-- Шаблон для новой формы ингредиента (скрыт) -->
-        <div class="ingredient-form-template" style="display: none;">
-            <div class="ingredient-form">
-                {{ ingredient_formset.empty_form.product.label }} {{ ingredient_formset.empty_form.product }}
-                <br><br>
-        
-                {{ ingredient_formset.empty_form.quantity.label }} {{ ingredient_formset.empty_form.quantity }}
-                <br><br>
-        
-                {{ ingredient_formset.empty_form.unit_of_measurement.label }} {{ ingredient_formset.empty_form.unit_of_measurement }}
-                <br><br>
-                <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
-                <button type="button" class="delete-form">Удалить ингредиент</button>
             </div>
-        </div>
+            
         
-    
-        <button type="button" id="add-ingredient">Добавить ингредиент</button>
-        <br><br>
+            <button type="button" id="add-ingredient">Добавить ингредиент</button>
+            <br><br>
 
-        <div id="step-forms">
-            {{ step_formset.management_form }}
-            {% for form in step_formset %}
+            <div id="step-forms">
+                {{ step_formset.management_form }}
+                {% for form in step_formset %}
+                    <div class="step-form">
+                        {{ form.text.label }} {{ form.text }}
+                        <br><br>
+
+                        <button type="button" class="delete-step-form">Удалить шаг</button>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Шаблон для новой формы ингредиента (скрыт) -->
+            <div class="step-form-template" style="display: none;">
                 <div class="step-form">
-                    {{ form.text.label }} {{ form.text }}
+                    {{ step_formset.empty_form.text.label }} {{ step_formset.empty_form.text }}
                     <br><br>
 
                     <button type="button" class="delete-step-form">Удалить шаг</button>
                 </div>
-            {% endfor %}
-        </div>
-        
-        <!-- Шаблон для новой формы ингредиента (скрыт) -->
-        <div class="step-form-template" style="display: none;">
-            <div class="step-form">
-                {{ step_formset.empty_form.text.label }} {{ step_formset.empty_form.text }}
-                <br><br>
-
-                <button type="button" class="delete-step-form">Удалить шаг</button>
             </div>
-        </div>
+            
         
-    
-        <button type="button" id="add-step">Добавить шаг</button>
-        <br><br>
+            <button type="button" id="add-step">Добавить шаг</button>
+            <br><br>
 
-        <button type="submit">Добавить рецепт</button>
-        <br>
-        <br>
-    </form>
+            <button type="submit">Добавить рецепт</button>
+            <br>
+            <br>
+        </form>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // для ингридиентов
-            const ingredientFormsContainer = document.getElementById('ingredient-forms');
-            const ingredientTemplate = document.querySelector('.ingredient-form-template').cloneNode(true);
-            ingredientTemplate.style.display = 'block';
-            let totalFormsInput = document.querySelector('#id_recipe_ingredients-TOTAL_FORMS');
-            if (totalFormsInput) {
-                let formCount = parseInt(totalFormsInput.value);
-            } else {
-                console.error("TOTAL_FORMS element not found");
-            }
-
-            // для шагов
-            const stepFormsContainer = document.getElementById('step-forms');
-            const stepTemplate = document.querySelector('.step-form-template').cloneNode(true);
-            stepTemplate.style.display = 'block';
-
-            let totalFormsStepInput = document.querySelector('#id_recipe_steps-TOTAL_FORMS');
-            if (totalFormsStepInput) {
-                let formCountStep = parseInt(totalFormsStepInput.value);
-            } else {
-                console.error("TOTAL_FORMS element not found");
-            }
-
-            // для ингридиентов
-            let formCount = parseInt(document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value);
-            document.getElementById('add-ingredient').addEventListener('click', function () {
-                // Клонируем шаблон формы
-                const newForm = ingredientTemplate.cloneNode(true);
-    
-                // Обновляем индексы имен полей в новой форме
-                newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formCount);
-                ingredientFormsContainer.appendChild(newForm);
-    
-                formCount++;
-                // Обновляем значение поля total_forms в Management Form
-                const totalFormsEl = document.querySelector('#id_recipe_ingredients-TOTAL_FORMS');
-                totalFormsEl.value = formCount;  // Исправлено здесь
-            });
-    
-
-            // для шагов
-
-            let formCountStep = parseInt(document.querySelector('#id_recipe_steps-TOTAL_FORMS').value);
-            document.getElementById('add-step').addEventListener('click', function () {
-                // Клонируем шаблон формы
-                const newStepForm = stepTemplate.cloneNode(true);
-    
-                // Обновляем индексы имен полей в новой форме
-                newStepForm.innerHTML = newStepForm.innerHTML.replace(/__prefix__/g, formCountStep);
-                stepFormsContainer.appendChild(newStepForm);
-    
-                formCountStep++;
-                // Обновляем значение поля total_forms в Management Form
-                const totalFormsStepEl = document.querySelector('#id_recipe_steps-TOTAL_FORMS');
-                totalFormsStepEl.value = formCountStep;  // Исправлено здесь
-            });
-
-            // для ингридиентов
-            // Удаление формы при нажатии на "Удалить"
-            ingredientFormsContainer.addEventListener('click', function (e) {
-                if (e.target.classList.contains('delete-form')) {
-                    e.target.closest('.ingredient-form').remove();
-
-
-
-
-
-                    // Обновляем значения индексов форм
-                    const forms = ingredientFormsContainer.querySelectorAll('.ingredient-form');
-                    forms.forEach((form, index) => {
-                        // Обновляем индексы в полях формы
-                        form.querySelectorAll('input, select, textarea').forEach((input) => {
-                            input.name = input.name.replace(/-\d+-/, `-${index}-`);
-                            input.id = input.id.replace(/-\d+-/, `-${index}-`);
+        <!-- Select2 scripts -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        
+        <script>
+            $(document).ready(function() {
+                function initializeProductSelect2() {
+                    $('[id^="id_recipe_ingredients-"][id$="-product"]').each(function() {
+                        $(this).select2({
+                            placeholder: "Выберите продукт",
+                            // allowClear: true, # подумать насчет крестика
+                            ajax: {
+                                url: '/recipies/product-autocomplete/',  // Здесь укажите путь к вашему API для получения списка продуктов
+                                dataType: 'json',
+                                delay: 250,  // Уменьшите задержку, если необходимо
+                                processResults: function (data) {
+                                    // Ограничиваем количество продуктов до 5
+                                    var limitedData = data.slice(0, 5);
+                                    
+                                    return {
+                                        results: limitedData.map(function(item) {
+                                            return {
+                                                id: item.id,   // Замените на поле, которое представляет уникальный идентификатор продукта
+                                                text: item.name  // Замените на поле, которое содержит название продукта
+                                            };
+                                        })
+                                    };
+                                },
+                                cache: true
+                            }
                         });
                     });
-
-                    formCount--;
-                    // Обновляем значение поля total_forms при удалении
-                    document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value = formCount;  // Исправлено здесь
                 }
+        
+                // Инициализируем select2 при загрузке страницы
+                initializeProductSelect2();
+        
+                // Инициализация select2 для новых элементов после добавления формы
+                $('#add-ingredient').click(function() {
+                    initializeProductSelect2();
+                });
+        
+                // Инициализация select2 для удаленных элементов
+                $('#ingredient-forms').on('click', '.delete-form', function() {
+                    initializeProductSelect2();
+                });
             });
+        </script>
+        
+        <!-- Добавить и удалить ингридиенты и шаги -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // для ингридиентов
+                const ingredientFormsContainer = document.getElementById('ingredient-forms');
+                const ingredientTemplate = document.querySelector('.ingredient-form-template').cloneNode(true);
+                ingredientTemplate.style.display = 'block';
+                let totalFormsInput = document.querySelector('#id_recipe_ingredients-TOTAL_FORMS');
+                if (totalFormsInput) {
+                    let formCount = parseInt(totalFormsInput.value);
+                } else {
+                    console.error("TOTAL_FORMS element not found");
+                }
+
+                // для шагов
+                const stepFormsContainer = document.getElementById('step-forms');
+                const stepTemplate = document.querySelector('.step-form-template').cloneNode(true);
+                stepTemplate.style.display = 'block';
+
+                let totalFormsStepInput = document.querySelector('#id_recipe_steps-TOTAL_FORMS');
+                if (totalFormsStepInput) {
+                    let formCountStep = parseInt(totalFormsStepInput.value);
+                } else {
+                    console.error("TOTAL_FORMS element not found");
+                }
+
+                // для ингридиентов
+                let formCount = parseInt(document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value);
+                document.getElementById('add-ingredient').addEventListener('click', function () {
+                    // Клонируем шаблон формы
+                    const newForm = ingredientTemplate.cloneNode(true);
+        
+                    // Обновляем индексы имен полей в новой форме
+                    newForm.innerHTML = newForm.innerHTML.replace(/__prefix__/g, formCount);
+                    ingredientFormsContainer.appendChild(newForm);
+        
+                    formCount++;
+                    // Обновляем значение поля total_forms в Management Form
+                    const totalFormsEl = document.querySelector('#id_recipe_ingredients-TOTAL_FORMS');
+                    totalFormsEl.value = formCount;  // Исправлено здесь
+                });
+        
+
+                // для шагов
+
+                let formCountStep = parseInt(document.querySelector('#id_recipe_steps-TOTAL_FORMS').value);
+                document.getElementById('add-step').addEventListener('click', function () {
+                    // Клонируем шаблон формы
+                    const newStepForm = stepTemplate.cloneNode(true);
+        
+                    // Обновляем индексы имен полей в новой форме
+                    newStepForm.innerHTML = newStepForm.innerHTML.replace(/__prefix__/g, formCountStep);
+                    stepFormsContainer.appendChild(newStepForm);
+        
+                    formCountStep++;
+                    // Обновляем значение поля total_forms в Management Form
+                    const totalFormsStepEl = document.querySelector('#id_recipe_steps-TOTAL_FORMS');
+                    totalFormsStepEl.value = formCountStep;  // Исправлено здесь
+                });
+
+                // для ингридиентов
+                // Удаление формы при нажатии на "Удалить"
+                ingredientFormsContainer.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('delete-form')) {
+                        e.target.closest('.ingredient-form').remove();
 
 
-            // для шагов
-            // Удаление формы при нажатии на "Удалить"
-            stepFormsContainer.addEventListener('click', function (e) {
-                if (e.target.classList.contains('delete-step-form')) {
-                    e.target.closest('.step-form').remove();
 
 
-                    // Обновляем значения индексов форм
-                    const stepForms = StepFormsContainer.querySelectorAll('.step-form');
-                    stepForms.forEach((form, index) => {
-                        // Обновляем индексы в полях формы
-                        form.querySelectorAll('input, select, textarea').forEach((input) => {
-                            input.name = input.name.replace(/-\d+-/, `-${index}-`);
-                            input.id = input.id.replace(/-\d+-/, `-${index}-`);
+
+                        // Обновляем значения индексов форм
+                        const forms = ingredientFormsContainer.querySelectorAll('.ingredient-form');
+                        forms.forEach((form, index) => {
+                            // Обновляем индексы в полях формы
+                            form.querySelectorAll('input, select, textarea').forEach((input) => {
+                                input.name = input.name.replace(/-\d+-/, `-${index}-`);
+                                input.id = input.id.replace(/-\d+-/, `-${index}-`);
+                            });
                         });
-                    });
 
-                    formCountStep--;
-                    // Обновляем значение поля total_forms при удалении
-                    document.querySelector('#id_recipe_steps-TOTAL_FORMS').value = formCountStep;  // Исправлено здесь
-                }
+                        formCount--;
+                        // Обновляем значение поля total_forms при удалении
+                        document.querySelector('#id_recipe_ingredients-TOTAL_FORMS').value = formCount;  // Исправлено здесь
+                    }
+                });
+
+
+                // для шагов
+                // Удаление формы при нажатии на "Удалить"
+                stepFormsContainer.addEventListener('click', function (e) {
+                    if (e.target.classList.contains('delete-step-form')) {
+                        e.target.closest('.step-form').remove();
+
+
+                        // Обновляем значения индексов форм
+                        const stepForms = StepFormsContainer.querySelectorAll('.step-form');
+                        stepForms.forEach((form, index) => {
+                            // Обновляем индексы в полях формы
+                            form.querySelectorAll('input, select, textarea').forEach((input) => {
+                                input.name = input.name.replace(/-\d+-/, `-${index}-`);
+                                input.id = input.id.replace(/-\d+-/, `-${index}-`);
+                            });
+                        });
+
+                        formCountStep--;
+                        // Обновляем значение поля total_forms при удалении
+                        document.querySelector('#id_recipe_steps-TOTAL_FORMS').value = formCountStep;  // Исправлено здесь
+                    }
+                });
             });
-        });
-    </script>
-    
-{% endif %}
+        </script>
+        
+    {% endif %}
+
+{% endblock content %}
 

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Recipe, Category, RecipeIngredient, RecipeStep
+from .models import Product, Recipe, Category, RecipeIngredient, RecipeStep
 from mptt.forms import TreeNodeMultipleChoiceField
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.exceptions import ValidationError
@@ -11,6 +11,7 @@ def validate_file(file: InMemoryUploadedFile) -> None:
         raise ValidationError("file name shod not consist 'virus'")
     if file.size > allowed_size:
         raise ValidationError("file size is too big. 1Mb limit'")
+
 
 class RecipeForm(forms.ModelForm):
     categories = TreeNodeMultipleChoiceField(queryset=Category.objects.all(), required=False)     
@@ -34,6 +35,10 @@ class RecipeIngredientForm(forms.ModelForm):
         model = RecipeIngredient
         fields = ['product', 'quantity', 'unit_of_measurement']
 
+    # def __init__(self, *args, **kargs):
+    #     super().__init__(self, *args, **kargs)
+    #     self.fields['product'].queryset = Product.objects.none()
+
 
 class RecipeStepForm(forms.ModelForm):
     class Meta:
@@ -43,3 +48,9 @@ class RecipeStepForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['text'].required = True
+
+
+class ProductForm(forms.ModelForm):
+        class Meta:
+            model = Product
+            fields = ['name', 'calories', 'fats', 'carbohydrates', 'proteins']

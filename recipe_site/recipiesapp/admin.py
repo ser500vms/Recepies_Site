@@ -33,6 +33,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'author', 
         'image', 
         'cooking_time', 
+        'cooking_time_text',
         'quantity_of_servings',
         'recipe_calories',
         'recipe_fats',
@@ -60,7 +61,7 @@ class RecipeAdmin(admin.ModelAdmin):
             {
                 'classes': ['wide'],
                 'description': 'Main info',
-                'fields': ['cooking_time', 'quantity_of_servings'],
+                'fields': ['cooking_time', 'cooking_time_text',  'quantity_of_servings'],
             },
         ),
         (

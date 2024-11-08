@@ -36,7 +36,7 @@ class HomeView(ListView):
 
         # Если есть запрос по названию
         if query:
-            queryset = queryset.filter(Q(name__icontains=query) | Q(name__icontains=query.capitalize()))
+            queryset = queryset.filter(Q(name__icontains=query.lower()) | Q(name__icontains=query.capitalize()))
 
         # Если есть выбранные категории
         if categories:
@@ -66,10 +66,11 @@ class LkView(LoginRequiredMixin, ListView):
     redirect_field_name = 'redirect_to'
     context_object_name = "recipies"
 
+
     def get_queryset(self):
         # Фильтруем рецепты по текущему пользователю
         return Recipe.objects.filter(author=self.request.user)
-
+    
 
 class RegistrationView(CreateView):
     form_class = CustomUserForm

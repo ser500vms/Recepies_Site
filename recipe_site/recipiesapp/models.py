@@ -43,6 +43,7 @@ class Recipe(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     image = models.ImageField(upload_to=recipe_image_upload_path, blank=False)
     cooking_time = models.PositiveIntegerField(blank=False)
+    cooking_time_text = models.CharField(max_length=20, blank=False)
     quantity_of_servings = models.PositiveIntegerField(default=1, blank=False)
     recipe_calories = models.PositiveIntegerField(blank=True, null=True)
     recipe_fats = models.DecimalField(blank=True, null=True, max_digits=6, decimal_places=2)
@@ -63,10 +64,10 @@ class Recipe(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=50, blank=False)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    calories = models.PositiveIntegerField(blank=False)
-    fats = models.DecimalField(max_digits=6, decimal_places=2)
-    carbohydrates = models.DecimalField(max_digits=6, decimal_places=2)
-    proteins = models.DecimalField(max_digits=6, decimal_places=2)
+    calories = models.PositiveIntegerField(blank=False, default=0)
+    fats = models.DecimalField(max_digits=6, decimal_places=2, blank=False, default=0)
+    carbohydrates = models.DecimalField(max_digits=6, decimal_places=2, blank=False, default=0)
+    proteins = models.DecimalField(max_digits=6, decimal_places=2, blank=False, default=0)
     creation_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
 
@@ -81,13 +82,12 @@ class RecipeIngredient(models.Model):
     "Мл": "Мл",
     "Ч.л": "Ч.л",
     "С.л": "С.л",
-    "Шт": "Шт",
     "По вкусу": "По вкусу",
 }
     
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='recipe_ingredients')
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=False) # подумать каскад или сет нал
-    quantity =  models.DecimalField(max_digits=6, decimal_places=2, blank=False)
+    quantity =  models.DecimalField(max_digits=10, decimal_places=2, blank=False, default=0)
     unit_of_measurement = models.CharField(max_length=8, choices=MEASUREMENT_CHOICES, blank=False)
     creation_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
