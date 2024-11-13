@@ -404,7 +404,33 @@
 
 13.11.24 - *Деплой*
 
-            - Найти базу данных с продкутами и заполнить свою
+            - [x] Зарегистрировался на pythonAnywhere
+            - [x] В файле recipe_site/settings/settings.py внес следующие изменения:
+              - DEBUG = False
+              - SESSION_COOKIE_SECURE = True
+              - CSRF_COOKIE_SECURE = True
+              - import os
+              - SECRET_KEY = os.getenv('SECRET_KEY')
+              - ALLOWED_HOSTS = ['recipies.pythonanywhere.com',]
+              - STATIC_ROOT = BASE_DIR / 'static'
+              - MEDIA_ROOT = BASE_DIR / 'media'
+              - DATABASES = {
+                    'default': {
+                        'ENGINE': 'django.db.backends.mysql', 
+                        'NAME': 'recipies$default', 
+                        'USER': 'recipies', 
+                        'PASSWORD': os.getenv('MYSQL_PASSWORD'), 
+                        'HOST': 'recipies.mysql.pythonanywhere-services.com', 
+                        'OPTIONS': {
+                            'init_command': "SET NAMES 'utf8mb4';SET sql_mode='STRICT_TRANS_TABLES'", 'charset': 'utf8mb4', 
+                        }, 
+                    } 
+                  }
+            - [x] Обновил файл с зависимостями pip freeze > requirements.txt
+            - [x] В файл requirements.txt добавил mysqlclient для работы с базой данных и python-dotenv для секретного ключа
+
+
+            - [x] Прешел в раздел базы данных на сайте и открыл консоль в которой ввел команду  ALTER DATABASE username$default CHARACTER SET utf8 COLLATE utf8_general_ci; для использования любой кодировки
 
 
 
