@@ -106,6 +106,7 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
             total_fats = 0
             total_carbohydrates = 0
             total_proteins = 0
+            total_qantity = 0
             for ingredient_form in ingredient_formset:
                 # Проверка, что product и quantity присутствуют в cleaned_data
                 if 'product' in ingredient_form.cleaned_data and 'quantity' in ingredient_form.cleaned_data:
@@ -129,6 +130,8 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
 
                     # Подсчет общей калорийности на основе количества
                     ingredient_calories = (quantity * unit_calories).quantize(Decimal('0.01'), rounding=ROUND_UP)
+                    total_qantity += quantity
+                    print(total_qantity)
                     total_calories += ingredient_calories
                     ingredient_fats = (quantity * unit_fats)
                     total_fats += ingredient_fats
@@ -197,10 +200,10 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
                 self.object.categories.add(category)
             
 
-            self.object.recipe_calories = total_calories
-            self.object.recipe_fats = total_fats
-            self.object.recipe_carbohydrates = total_carbohydrates
-            self.object.recipe_proteins = total_proteins
+            self.object.recipe_calories = (total_calories / total_qantity) * 100
+            self.object.recipe_fats = (total_fats / total_qantity) * 100
+            self.object.recipe_carbohydrates = (total_carbohydrates / total_qantity) * 100
+            self.object.recipe_proteins = (total_proteins / total_qantity) * 100
             self.object.save()
 
             return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
@@ -308,6 +311,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             total_fats = 0
             total_carbohydrates = 0
             total_proteins = 0
+            total_qantity = 0
             for ingredient_form in ingredient_formset:
                 # Проверка, что product и quantity присутствуют в cleaned_data
                 if 'product' in ingredient_form.cleaned_data and 'quantity' in ingredient_form.cleaned_data:
@@ -332,6 +336,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                     # Подсчет общей калорийности на основе количества
                     ingredient_calories = (quantity * unit_calories).quantize(Decimal('0.01'), rounding=ROUND_UP)
                     total_calories += ingredient_calories
+                    total_qantity +=  quantity
                     ingredient_fats = (quantity * unit_fats)
                     total_fats += ingredient_fats
                     ingredient_carbohydrates = (quantity * unit_carbohydrates)
@@ -399,10 +404,10 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 self.object.categories.add(category)
 
 
-            self.object.recipe_calories = total_calories
-            self.object.recipe_fats = total_fats
-            self.object.recipe_carbohydrates = total_carbohydrates
-            self.object.recipe_proteins = total_proteins
+            self.object.recipe_calories = (total_calories / total_qantity) * 100
+            self.object.recipe_fats = (total_fats / total_qantity) * 100
+            self.object.recipe_carbohydrates = (total_carbohydrates / total_qantity) * 100
+            self.object.recipe_proteins = (total_proteins / total_qantity) * 100
             self.object.save()
 
             return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))

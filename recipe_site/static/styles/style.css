@@ -1008,6 +1008,60 @@
   color: black;
 }
 
+.add-product {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background: linear-gradient(to bottom left, #281a0f, #422f21);
+  color: white;
+  font-size: 25px;
+}
+.add-product__title {
+  margin-top: 20px;
+  display: flex;
+}
+.add-product__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+}
+.add-product__form__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.add-product__form__content input {
+  font-size: 20px;
+  padding: 5px;
+}
+.add-product__link {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+  opacity: 0.67;
+  background-color: rgb(225, 225, 225);
+  padding: 10px;
+  border-radius: 20px;
+  color: black;
+}
+.add-product__button {
+  display: flex;
+  justify-content: center;
+  font-size: 25px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  opacity: 0.67;
+  background-color: rgb(225, 225, 225);
+  padding: 10px;
+  border-radius: 20px;
+  color: black;
+}
+
 body {
   font-family: "Lato", sans-serif;
 }
@@ -1869,6 +1923,20 @@ button:active {
     margin-top: 20px;
     margin-bottom: 20px;
   }
+  .add-product {
+    padding-left: calc(50% - 192px);
+    padding-right: calc(50% - 192px);
+  }
+  .add-product__form__content {
+    flex-direction: column;
+    font-size: 20px;
+  }
+  .add-product__form__content input {
+    font-size: 20px;
+  }
+  .add-product__form-button {
+    margin-top: 20px;
+  }
 }
 @media screen and (max-width: 480px) {
   .center {
@@ -2234,5 +2302,19 @@ button:active {
   .password-reset-complete__link {
     margin-top: 20px;
     margin-bottom: 20px;
+  }
+  .add-product {
+    padding-left: calc(50% - 192px);
+    padding-right: calc(50% - 192px);
+  }
+  .add-product__form__content {
+    flex-direction: column;
+    font-size: 20px;
+  }
+  .add-product__form__content input {
+    font-size: 20px;
+  }
+  .add-product__form-button {
+    margin-top: 20px;
   }
 }/*# sourceMappingURL=style.css.map */

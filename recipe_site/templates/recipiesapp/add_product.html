@@ -4,43 +4,35 @@
 
     {% if user.is_authenticated %}
 
+    <section class="add-product center">
+        <form  method="post" enctype="multipart/form-data"  class="add-product__form">
+            {% csrf_token %}
 
-    <form  method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+            {{ form.non_field_errors }} <!-- Для ошибок формы -->
+            <div class="add-product__form__content">
+                {{ form.name.label }} {{ form.name }}
+            </div>
+            <div class="add-product__form__content">
+                {{ form.calories.label }} {{ form.calories }}
+                {{ form.calories.errors }}
+            </div>
+            <div class="add-product__form__content">
+                {{ form.fats.label }} {{ form.fats }}
+                {{ form.fats.errors }}
+            </div>
+            <div class="add-product__form__content">
+                {{ form.carbohydrates.label }} {{ form.carbohydrates }}
+                {{ form.carbohydrates.errors }}
+            </div>
+            <div class="add-product__form__content">
+                {{ form.proteins.label }} {{ form.proteins }}
+                {{ form.proteins.errors }}
+            </div>
 
-        {{ form.non_field_errors }} <!-- Для ошибок формы -->
+            <button type="submit" class="add-product__form-button">Добавить продукт</button>
 
-        {{ form.name.label }} {{ form.name }}
-
-        <br>
-        <br>
-
-        {{ form.calories.label }} {{ form.calories }}
-        {{ form.calories.errors }}
-        <br>
-        <br>
-
-        {{ form.fats.label }} {{ form.fats }}
-        {{ form.fats.errors }}
-
-        <br>
-        <br>
-
-        {{ form.carbohydrates.label }} {{ form.carbohydrates }}
-        {{ form.carbohydrates.errors }}
-
-        <br>
-        <br>
-
-        {{ form.proteins.label }} {{ form.proteins }}
-        {{ form.proteins.errors }}
-
-        <br>
-        <br>
-        <button type="submit">Добавить продукт</button>
-
-    </form>
-
+        </form>
+    </section>
     {% endif %}
 
 {% endblock content %}

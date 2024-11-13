@@ -338,3 +338,21 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.add-product {
+    padding-left: calc(50% - $tabletBigResolution / 4);
+    padding-right: calc(50% - $tabletBigResolution / 4); 
+}
+
+.add-product__form__content {
+    flex-direction: column;
+    font-size: 20px;
+}
+
+.add-product__form__content input {
+    font-size: 20px;
+}
+
+.add-product__form-button {
+    margin-top: 20px;
+}
