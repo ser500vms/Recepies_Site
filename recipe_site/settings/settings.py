@@ -24,7 +24,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = [
-    'recipies.pythonanywhere.com',
+    'zsvrecipe.pythonanywhere.com',
 ]
 
 
@@ -83,10 +83,10 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'recipies$default', 
-        'USER': 'recipies', 
+        'NAME': 'zsvrecipe$default', 
+        'USER': 'zsvrecipe', 
         'PASSWORD': os.getenv('MYSQL_PASSWORD'), 
-        'HOST': 'recipies.mysql.pythonanywhere-services.com', 
+        'HOST': 'zsvrecipe.mysql.pythonanywhere-services.com', 
         'OPTIONS': {
             'init_command': "SET NAMES 'utf8mb4';SET sql_mode='STRICT_TRANS_TABLES'", 'charset': 'utf8mb4', 
         }, 
