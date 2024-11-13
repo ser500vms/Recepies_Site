@@ -1,0 +1,16 @@
+.center {
+    padding-left: calc(50% - $fhdResolution / 2);
+    padding-right: calc(50% - $fhdResolution / 2);
+}    
+
+.header-container__left__filter-description {
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.recipes-preview__card__button-box {
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center !important;
+}
+

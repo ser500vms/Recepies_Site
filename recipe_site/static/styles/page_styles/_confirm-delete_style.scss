@@ -1,0 +1,42 @@
+@import '../vars';
+
+
+.confirm-delete {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+
+    background: linear-gradient(to bottom left, $cardEndGradientBgColor, $cardStartGradientBgColor);
+
+    color: white;
+    font-size: 25px;
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        font-size: 30px;
+        margin-top: 20px;
+
+        margin-bottom: 20px;
+    }
+
+    &__form input {
+        display: flex;
+        justify-content: center;
+        font-size: 25px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        opacity: 0.67;
+        background-color: rgb(225, 225, 225);
+
+        padding: 10px;
+        border-radius: 20px;
+
+        color: black;
+
+    }
+}

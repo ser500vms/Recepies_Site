@@ -1,26 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}Update product{% endblock title %}
 
 {% block content %}
-<h1>Update product</h1>
-<div>
-    <form method="post">
-        {% csrf_token %}
 
-        {{ form.as_p }}
+<section class="user-update center">
+    <h2 class="user-update__title">Обновите информацию о пользователе</h1>
+    <div>
+        <form method="post" class="user-update__form">
+            {% csrf_token %}
+            <div class="user-update__form__content">
+                {{form.first_name.label}} {{form.first_name}}
+            </div>
+            <div class="user-update__form__content">
+                {{form.last_name.label}} {{form.last_name}}
+            </div>
+            <div class="user-update__form__content">
+                {{form.username.label}} {{form.username}}
+            </div>
+            <div class="user-update__form__content">
+                {{form.email.label}} {{form.email}}
+            </div>
 
-        <a href="{% url 'password_change' %}">
-            Изменить пароль
-        </a>
+            <a href="{% url 'password_change' %}" class="user-update__link">
+                Изменить пароль
+            </a>
 
-        <button type="submit">Update</button>
-    </form>
-</div>
+            <button type="submit" class="user-update__button">Обновить информацию</button>
+        </form>
+    </div> 
+</section>
 
-<div>
-    <a href="{% url 'user_info' pk=user.pk %}">
-        Back to product #{{ object.pk }}
-    </a>
-</div>
 {% endblock content %}

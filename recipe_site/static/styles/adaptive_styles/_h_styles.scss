@@ -1,0 +1,179 @@
+//tablet css
+
+.center {
+    padding-left: calc(50% - $hResolution / 2);
+    padding-right: calc(50% - $hResolution / 2);
+} 
+
+.header-container__left__filter-description {
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.header-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+} 
+
+.header-container__left {
+    padding-left: 0;
+}
+
+.header-container__right {
+    padding-right: 0;
+
+}
+
+.header-container__right__registration {
+    padding: 15px;
+}
+
+.hd-r-r-l {
+    margin-left: 60px;
+}
+
+.recipes-preview__block-description {
+    text-align: center;
+    gap: 20px;
+}
+
+.recipes-preview__cards {
+    justify-content: center;
+}
+
+.recipes-preview__card {
+    width: 70%;
+}
+
+.recipes-preview__card__button-box {
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center !important;
+}
+
+.recipes-preview__pagination span{
+    font-size: 25px;
+}
+
+.header-container__left__filter-description__parent__subtitle{
+    font-size: 20px;
+}
+
+.header-container__left__filter-description__children__content {
+    font-size: 20px;
+}
+
+.header-filter-container__button {
+    font-size: 20px;
+}
+
+.add-recipe__form__first-block__img {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.add-recipe__form {
+    font-size: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 768px;
+}
+
+.add-recipe__form__first-block {
+    justify-content: center;
+    align-items: center;
+}
+
+.add-recipe__form__second-block__categories {
+    flex-direction: column;
+}
+
+.add-recipe__form__third-block {
+    align-items: center;
+    justify-content: center;
+}
+
+.ingredient-form {
+    justify-content: center;
+}
+
+.add-recipe__form__third-block__cooking-time input {
+    width: 100px;
+}
+
+.add-recipe__form__third-block__quantity-of-servings input {
+    width: 100px;
+}
+
+.add-recipe__form__fifth-block button {
+    font-size: 25px;
+}
+
+.add-recipe__form__fifth-block__content a {
+    font-size: 25px;
+}
+
+.add-recipe__form__sixth-block__step-form textarea {
+    width: 680px;
+}
+
+.add-recipe__form__sixth-block__delete-button {
+    font-size: 25px;
+}
+
+.add-step-form {
+    font-size: 25px;
+}
+
+.submit-recipe-form {
+    font-size: 25px;
+}
+
+.select2-selection__rendered {
+    font-size: 20px;
+}
+
+.select2-selection {
+    padding-top: 5px;
+    padding-bottom: 35px;
+}
+
+.ingredient-form__content-second__unit-of-measurement {
+    font-size: 20px;
+}
+
+.delete-form {
+    font-size: 25px;
+}
+
+.add-recipe__form__fifth-block__content {
+    font-size: 25px;
+}
+
+.delete-step-form {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.recipe__card {
+    padding-left: calc(50% - $hResolution / 4);
+    padding-right: calc(50% - $hResolution / 4); 
+}
+
+.confirm-delete {
+    padding-left: calc(50% - $hResolution / 4);
+    padding-right: calc(50% - $hResolution / 4); 
+}
+
+.confirm-delete__form {
+    text-align: center;
+}
+
+.registration__data {
+    padding-left: calc(50% - $hResolution / 4);
+    padding-right: calc(50% - $hResolution / 4); 
+}

@@ -1,9 +1,13 @@
-// const menuCloseEl = document.querySelector('.menu__close');
-// const checkboxEl = document.querySelector('.menu__burger-checkbox');
 
-// menuCloseEl.addEventListener('click', (e) => {
-//     checkboxEl.checked = false;
-// });
+function GoToHome() {
+    const homeButton = document.querySelector('.header-container__left__home-button');
+    homeButton.addEventListener('click', (e) => {
+        document.location.href = "{% url 'home_page' %}"
+        console.log("{% url 'home_page' %}")
+        console.log('dfgfdg')
+    });
+}
+
 
 function GoToRecipe() {
     const recipeButtons = document.querySelectorAll('.recipes-preview__card__button-box__button');
@@ -31,6 +35,7 @@ function ShowFilters() {
 
 // Инициализируем обработчики событий, когда DOM загружен
 document.addEventListener('DOMContentLoaded', () => {
+
     GoToRecipe();
     ShowFilters();
 });

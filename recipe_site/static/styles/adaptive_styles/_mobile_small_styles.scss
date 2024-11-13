@@ -1,0 +1,59 @@
+//tablet css
+
+.center {
+    padding-left: calc(50% - $hResolution / 2);
+    padding-right: calc(50% - $hResolution / 2);
+} 
+
+.header-container__left__filter-description {
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.header-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+} 
+
+.header-container__left {
+    padding-left: 0;
+}
+
+.header-container__right {
+    padding-right: 0;
+}
+
+.hd-r-r-l {
+    margin-left: 60px;
+}
+
+.recipes-preview__cards {
+    justify-content: center;
+}
+
+.recipes-preview__card {
+    width: 40%;
+}
+
+.recipes-preview__card__button-box {
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center !important;
+}
+
+.recipes-preview__pagination span{
+    font-size: 25px;
+}
+
+.header-container__left__filter-description__parent__subtitle{
+    font-size: 20px;
+}
+
+.header-container__left__filter-description__children__content {
+    font-size: 20px;
+}
+
+.header-filter-container__button {
+    font-size: 20px;
+}

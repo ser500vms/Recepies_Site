@@ -3,133 +3,141 @@
 {% block content %}
     {% if user.is_authenticated %}
 
-        <form  method="post" enctype="multipart/form-data">
+    <section class="add-recipe center">
+        <form  method="post" enctype="multipart/form-data" class="add-recipe__form">
             {% csrf_token %}
 
-            {{ form.non_field_errors }} <!-- Для ошибок формы -->
+            <div class="add-recipe__form__first-block">
+                {{ form.non_field_errors }} <!-- Для ошибок формы -->     
+                {{ form.name.label }} <p class="add-recipe__form__first-block__name">{{ form.name }}</p>
 
-            {{ form.name.label }} {{ form.name }}
+                <p>Выбирите изображение</p> <p class="add-recipe__form__first-block__img">{{ form.image }}</p>
+                {{ form.image.errors }}
 
-            <br>
-            <br>
-
-            {{ form.image.label }} {{ form.image }}
-            {{ form.image.errors }}
-            <br>
-            <br>
-
-            {{ form.short_description.label }} {{ form.short_description }}
-
-            <br>
-            <br>
+                {{ form.short_description.label }} <p class="add-recipe__form__first-block__short-description">{{ form.short_description }}</p>                           
+            </div>
 
             <!-- Категории -->
 
-            <div>
-                {{ form.categories.label }}<br>
-                {% for category in form.fields.categories.queryset %}
-                    {% if not category.parent and category.name != 'Калорийность на 100г.' %} 
-                        <p><strong>{{ category.name }}</strong></p>
-                        {% for subcategory in category.get_children %}
-                            <input 
-                                type="checkbox" 
-                                name="categories" 
-                                value="{{ subcategory.id }}" 
-                                id="category_{{ subcategory.id }}"
-                                {% if subcategory.id in selected_categories %}
-                                    checked 
-                                {% endif %}
-                                
-                            />
-                            <label for="category_{{ subcategory.id }}">
-                                {{ subcategory.name }}
-                            </label><br>
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
+            <div class="add-recipe__form__second-block">
+                <div><p>Выбирите категории</p></div>
+                <div class="add-recipe__form__second-block__categories">
+                    {% for category in form.fields.categories.queryset %}
+                        {% if not category.parent and category.name != 'Калорийность на 100г.' and category.name != 'Время приготовления' %}
+                        <div class="add-recipe__form__second-block__categories__content">
+                            <p class="add-recipe__form__second-block__categories__title"><strong>{{ category.name }}</strong></p>
+                            {% for subcategory in category.get_children %}
+                                <input 
+                                    type="checkbox" 
+                                    name="categories" 
+                                    value="{{ subcategory.id }}" 
+                                    id="category_{{ subcategory.id }}"
+                                    {% if subcategory.id in selected_categories %}
+                                        checked 
+                                    {% endif %}
+                                    
+                                />
+                                <label for="category_{{ subcategory.id }}">
+                                    {{ subcategory.name }}
+                                </label><br>
+                            {% endfor %}                        
+                        </div> 
+                            
+                        {% endif %}
+                    {% endfor %}                    
+                </div>
+
             </div>
 
-            {{ form.cooking_time.label }} {{ form.cooking_time }}
-            <br>
-            <br>
+            <div class="add-recipe__form__third-block">
+                {{ form.cooking_time.label }} в минутах <p class="add-recipe__form__third-block__cooking-time">{{ form.cooking_time }}</p>
 
-            {{ form.quantity_of_servings.label }} {{ form.quantity_of_servings }}
-            <br>
-            <br>
+                {{ form.quantity_of_servings.label }} <p class="add-recipe__form__third-block__quantity-of-servings">{{ form.quantity_of_servings }}</p>                
+            </div>
 
-            <div id="ingredient-forms">
+
+            <div id="ingredient-forms" class="add-recipe__form__fourth-block">
                 {{ ingredient_formset.management_form }}
+                <h2 class="add-recipe__form__fourth-block__title"></h2>
                 {% for form in ingredient_formset %}
+                    
                     <div class="ingredient-form">
-                        {{ form.product.label }} {{ form.product }}
+                        <div class="ingredient-form__content">
+                            {{ form.product.label }} <p class="ingredient-form__content__product">{{ form.product }}</p>
+                        </div>
+                        <div class="ingredient-form__content-second">
+                            {{ form.quantity.label }} <p class="ingredient-form__content-second__quantity">{{ form.quantity }}</p>
 
-                        <p>Не нашли продукт?</p>
-                        <a href="{% url 'add_product' %}">Добавить свой продукт</a>
-
-                        <br><br>
-            
-                        {{ form.quantity.label }} {{ form.quantity }}
-                        <br><br>
-            
-                        {{ form.unit_of_measurement.label }} {{ form.unit_of_measurement }}
-                        <br><br>
+                            {{ form.unit_of_measurement.label }} <p class="ingredient-form__content-second__unit-of-measurement">{{ form.unit_of_measurement }}</p>                            
+                        </div>
                         <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
 
                         <button type="button" class="delete-form">Удалить ингредиент</button>
+
                     </div>
                 {% endfor %}
+
             </div>
             
             <!-- Шаблон для новой формы ингредиента (скрыт) -->
             <div class="ingredient-form-template" style="display: none;">
                 <div class="ingredient-form">
-                    {{ ingredient_formset.empty_form.product.label }} {{ ingredient_formset.empty_form.product }}
-                    <br><br>
-            
-                    {{ ingredient_formset.empty_form.quantity.label }} {{ ingredient_formset.empty_form.quantity }}
-                    <br><br>
-            
-                    {{ ingredient_formset.empty_form.unit_of_measurement.label }} {{ ingredient_formset.empty_form.unit_of_measurement }}
-                    <br><br>
+                    <div class="ingredient-form__content">
+                        {{ ingredient_formset.empty_form.product.label }} <p class="ingredient-form__content__product">{{ ingredient_formset.empty_form.product }}</p>
+                    </div>
+                    <div class="ingredient-form__content-second">
+                        {{ ingredient_formset.empty_form.quantity.label }} <p class="ingredient-form__content-second__quantity">{{ ingredient_formset.empty_form.quantity }}</p>
+
+                        {{ ingredient_formset.empty_form.unit_of_measurement.label }} <p class="ingredient-form__content-second__unit-of-measurement">{{ ingredient_formset.empty_form.unit_of_measurement }}</p>                            
+                    </div>
                     <input class="delete-checbox" type="checkbox" name="{{ form.prefix }}-DELETE" id="{{ form.prefix }}-DELETE" hidden>
+
                     <button type="button" class="delete-form">Удалить ингредиент</button>
                 </div>
             </div>
             
         
-            <button type="button" id="add-ingredient">Добавить ингредиент</button>
-            <br><br>
+            <div class="add-recipe__form__fifth-block">
+                    <button type="button" id="add-ingredient">Добавить ингредиент</button>                
+                <div class="add-recipe__form__fifth-block__content">
+                    <p>Не нашли продукт?</p>
+                    <a href="{% url 'add_product' %}">Добавить свой продукт</a>                
+                </div>
+            </div>
 
-            <div id="step-forms">
+ 
+
+            <div id="step-forms" class="add-recipe__form__sixth-block">
                 {{ step_formset.management_form }}
                 {% for form in step_formset %}
-                    <div class="step-form">
-                        {{ form.text.label }} {{ form.text }}
-                        <br><br>
+                    <div class="step-form add-recipe__form__sixth-block__step-form">
+                        {{ form.text.label }} <p>{{ form.text }}</p>
 
-                        <button type="button" class="delete-step-form">Удалить шаг</button>
+                        <button type="button" class="delete-step-form add-recipe__form__sixth-block__delete-button">Удалить шаг</button>
                     </div>
                 {% endfor %}
             </div>
             
             <!-- Шаблон для новой формы ингредиента (скрыт) -->
             <div class="step-form-template" style="display: none;">
-                <div class="step-form">
+                <div class="step-form add-recipe__form__sixth-block__step-form">
                     {{ step_formset.empty_form.text.label }} {{ step_formset.empty_form.text }}
-                    <br><br>
+
 
                     <button type="button" class="delete-step-form">Удалить шаг</button>
                 </div>
             </div>
             
         
-            <button type="button" id="add-step">Добавить шаг</button>
-            <br><br>
+            <button type="button" id="add-step" class="add-step-form">Добавить шаг</button>
 
-            <button type="submit">Добавить рецепт</button>
+            <button type="submit" class="submit-recipe-form">Добавить рецепт</button>
             <br>
             <br>
-        </form>
+        </form>        
+    </section>
+
+
 
         <!-- Select2 scripts -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -140,8 +148,8 @@
                 function initializeProductSelect2() {
                     $('[id^="id_recipe_ingredients-"][id$="-product"]').each(function() {
                         $(this).select2({
-                            placeholder: "Выберите продукт",
-                            // allowClear: true, # подумать насчет крестика
+                            placeholder: "",
+                            // allowClear: false, // подумать насчет крестика
                             ajax: {
                                 url: '/recipies/product-autocomplete/',  // Здесь укажите путь к вашему API для получения списка продуктов
                                 dataType: 'json',

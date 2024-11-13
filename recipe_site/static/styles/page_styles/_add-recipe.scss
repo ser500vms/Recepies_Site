@@ -1,3 +1,314 @@
 
 @import '../vars';
 
+.add-recipe {
+    display: flex;
+    justify-content: center;
+
+    background: linear-gradient(to bottom left, $cardEndGradientBgColor, $cardStartGradientBgColor);
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        font-size: 30px;
+
+        &__first-block {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px 20px;
+
+            opacity: 0.67;
+            background-color: rgb(225, 225, 225);
+            border-radius: 20px;
+            border: none;
+
+            &__name input {
+                display: flex;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-size: 20px;
+            }
+
+            &__img input {
+                display: flex;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-size: 20px;
+            }
+
+            &__short-description input {
+                display: flex;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-size: 20px;
+            }
+        }
+
+        &__second-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+
+            opacity: 0.67;
+            background-color: rgb(225, 225, 225);
+            border-radius: 20px;
+            border: none;
+
+            padding: 20px;
+
+            &__categories {
+                display: flex;
+                gap: 15px;
+
+
+
+                &__title {
+                    text-align: center;
+                    padding-bottom: 20px;
+                }
+
+                &__content {
+                    border: 2px solid black;
+                    border-radius: 20px;
+                    padding: 20px;
+                }
+            }
+
+            &__categories label {
+                cursor: pointer;
+            }
+        }
+
+        &__third-block {
+            display: flex;
+            gap: 20px;
+
+            opacity: 0.67;
+            background-color: rgb(225, 225, 225);
+            border-radius: 20px;
+            border: none;
+
+            padding: 20px;
+
+            &__cooking-time input {
+                display: flex;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-size: 20px;
+            }
+
+            &__quantity-of-servings input {
+                display: flex;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-size: 20px;
+            }
+        }
+        
+        &__fourth-block {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            opacity: 0.67;
+            background-color: rgb(225, 225, 225);
+            border-radius: 20px;
+            border: none;
+
+            padding: 20px;
+
+            &__title {
+                text-align: center;
+                font-size: 30px;
+                font-weight: 400px;
+            }
+        }
+
+        &__fifth-block {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+    
+            opacity: 0.67;
+            background-color: rgb(225, 225, 225);
+            border-radius: 20px;
+            border: none;
+
+            padding: 20px;
+
+
+            &__content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            &__content a {
+                color: black;
+                border-radius: 20px;
+                border: 2px solid black;
+                padding: 20px;
+            }
+
+        }
+
+        &__fifth-block button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-size: 30px;
+            border-radius: 20px;
+            border: 2px solid black;
+        }
+
+        &__sixth-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            opacity: 0.67;
+            background-color: rgb(225, 225, 225);
+            border-radius: 20px;
+            border: none;
+
+            padding: 20px;
+
+            &__step-form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+
+            }
+
+            &__step-form textarea {
+                display: flex;
+                width: 1106px;
+                height: 200px;
+                border: 2px solid black;
+
+                font-size: 25px;
+            }
+
+        }
+    }
+
+
+}
+
+.ingredient-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    border: 2px solid black;
+    border-radius: 20px;
+
+    padding: 20px;
+
+    &__content {
+        display: flex;
+        align-items: center;
+
+
+
+        gap: 20px;
+
+        &__product {
+            width: 50%;
+        }
+
+        &__product select {
+            width: 50%;
+        }
+    }
+
+    &__content-second {
+        display: flex;
+        gap: 50px;
+
+        &__quantity input {
+            display: flex;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 20px;
+            width: 100px;
+        }
+
+        &__unit-of-measurement select {
+            display: flex;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            font-size: 20px;
+        }
+    }
+
+    
+
+}
+
+.select2-selection__rendered {
+    font-size: 25px;
+}
+
+.select2-selection {
+    padding-top: 5px;
+    padding-bottom: 30px;
+}
+
+.delete-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-size: 30px;
+    border-radius: 20px;
+    border: 2px solid black;
+}
+
+.delete-step-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-size: 30px;
+    border-radius: 20px;
+    border: 2px solid black;
+}
+
+.add-step-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-size: 30px;
+    border-radius: 20px;
+    border: 2px solid black;
+
+    opacity: 0.67;
+    background-color: rgb(225, 225, 225);
+}
+
+.submit-recipe-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-size: 30px;
+    border-radius: 20px;
+    border: 2px solid black;
+
+    opacity: 0.67;
+    background-color: rgb(225, 225, 225);
+}
+
+

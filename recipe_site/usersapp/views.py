@@ -9,7 +9,15 @@ from django.views.generic import (
     ListView
 )
 from .form import CustomUserForm
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib.auth.views import (
+LoginView, 
+LogoutView, 
+PasswordChangeView,
+PasswordResetDoneView, 
+PasswordResetView,
+PasswordResetConfirmView,
+PasswordResetCompleteView,
+)
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, 
@@ -42,6 +50,8 @@ class HomeView(ListView):
         if categories:
             queryset = queryset.filter(categories__id__in=categories).distinct()
 
+        # Получаем количество отображаемых рецептов из GET параметров
+        # count = self.request.GET.get('count', self.paginate_by)
 
         return  queryset # Возвращаем уникальные рецепты
     
@@ -57,10 +67,15 @@ class AboutUserView(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('login')
     redirect_field_name = 'redirect_to'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
+
 
 class LkView(LoginRequiredMixin, ListView):
     template_name = "pages/account-page.html"
-    paginate_by = 2
+    paginate_by = 3
     model = Recipe
     login_url = reverse_lazy('login')
     redirect_field_name = 'redirect_to'
@@ -70,6 +85,11 @@ class LkView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # Фильтруем рецепты по текущему пользователю
         return Recipe.objects.filter(author=self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
     
 
 class RegistrationView(CreateView):
@@ -93,7 +113,12 @@ class RegistrationView(CreateView):
     
     def get_success_url(self):
         return reverse_lazy('lk_page', kwargs={'pk': self.object.pk})
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
+    
 
 class MyLoginView(LoginView):
     form_class = AuthenticationForm
@@ -102,6 +127,11 @@ class MyLoginView(LoginView):
     
     def get_success_url(self):
         return reverse_lazy('lk_page', kwargs={'pk': self.request.user.pk})
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
     
 
 class MyLogoutView(LoginRequiredMixin, LogoutView):
@@ -121,6 +151,11 @@ class UserDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
     # Позволяем редактировать только собствен данные        
         return self.request.user == self.get_object()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
 
  
 class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -141,6 +176,11 @@ class UserUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
     # Позволяем редактировать только собствен данные        
         return self.request.user == self.get_object()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
 
 
 class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView, UserPassesTestMixin):
@@ -158,3 +198,47 @@ class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView, UserPassesT
     def test_func(self):
     # Позволяем редактировать только собствен данные        
         return self.request.user == self.get_object()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
+    
+    
+class UserPasswordResetView(PasswordResetView):
+        template_name = 'pages/password_reset_form.html'
+        email_template_name = 'pages/password_reset_email.html'
+        success_url = reverse_lazy("password_reset_done")
+
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+            return context
+
+
+class UserPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'pages/password_reset_done.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
+    
+
+class UserPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'pages/password_reset_confirm.html'
+    success_url = reverse_lazy("password_reset_complete")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
+    
+
+class UserPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name='pages/password_reset_complete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context

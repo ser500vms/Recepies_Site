@@ -8,10 +8,13 @@
 @import './page_styles/account-page_style';
 @import './page_styles/add-recipe';
 @import './page_styles/about-user_style';
-// @import 'page_styles/product_style';
-// @import 'page_styles/cart_style';
-
-
+@import './page_styles/user-update-form_style';
+@import './page_styles/confirm-delete_style';
+@import './page_styles/user-password-change-form_style';
+@import './page_styles/password-reset-form_style';
+@import './page_styles/password-reset-done_style';
+@import './page_styles/_password-reset-confirm_style';
+@import './page_styles/_password-reset-complete_style';
 
 
 body {
@@ -20,8 +23,6 @@ body {
 
 
 button:active {
-    // background-color: $mainTextFillColor;
-    // box-shadow: 0 5px #666;
     transform: translateY(4px);
 }
 
@@ -46,6 +47,27 @@ button:active {
         padding-left: 20px;
         gap: 20px;
 
+        &__home-button {
+            display: flex;
+            align-items: center;
+
+            color: rgb(34, 34, 36);
+            font-size: 25px;
+            font-weight: 500;
+            border-radius: 20px 20px;
+            border: none;
+
+            padding: 20px;
+
+            opacity: 0.67;
+            background-color: rgb(225, 225, 225);
+        }
+
+        &__home-button svg{
+        height: 50px;
+        width: auto;
+        }
+
         &__search-form {
             display: flex;
 
@@ -55,7 +77,6 @@ button:active {
                 color: rgb(34, 34, 36);
                 font-size: 25px;
                 font-weight: 500;
-                line-height: 17px;
                 text-align: left;
 
                 opacity: 0.67;
@@ -75,7 +96,7 @@ button:active {
                 background-color: rgb(225, 225, 225);
                 border: none;
                 border-radius: 0 20px 20px 0;
-                padding: 30px 20px;
+                padding: 30px 40px;
             }
 
             &__filters-button:active {
@@ -88,8 +109,59 @@ button:active {
                 border: none;
                 border-radius: 20px 20px;
                 padding: 30px 40px;
+                margin-left: 20px;
             } 
 
+        }
+
+        &__filter-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        &__filter-description {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+
+            padding-top: 20px;
+            padding-bottom: 20px;
+
+            &__parent {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+
+                opacity: 0.67;
+                background-color: rgb(225, 225, 225);
+                padding: 20px;
+                border-radius: 20px;
+                
+
+                font-size: 30px;
+
+                &__subtitle {
+                    text-align: center;
+                }
+            }
+
+            &__children {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                &__content {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 30px;
+                }
+
+                &__content label {
+                    cursor: pointer;
+                }
+            }
         }
     
     }
@@ -124,66 +196,43 @@ button:active {
 
 .header-filter-container {
     display: none;
-    flex-direction: column;
-    flex-wrap: wrap;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    background-color: #fff;
-
-    &__country-details {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        display: flex;
-        border: 2px solid black;
-
-        &__summary {
-            padding-top: 10px;
-            padding-left: 20px;
-            padding-right: 20px;
-            font-size: 30px;
-        }
-
-        &__box {
-            display: flex;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            padding-left: 24px;
-            padding-right: 20px;
-            font-size: 30px;
-
-            &__input:hover {
-                cursor: pointer;
-                display: flex;
-            }
-
-            &__label {
-                padding-left: 20px;
-                display: flex;
-            }
-        }
-    }
+    background-color: $menuColor;
 
     &__button {
         display: flex;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        padding-right: 20px;
-        padding-left: 20px;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 80px;
         margin-bottom: 20px;
+
+        border-radius: 20px;
+        border: none;
+
+        font-size: 30px;
+        font-weight: 400;
+
+
+
+        opacity: 0.67;
+        background-color: rgb(225, 225, 225);
     }
 }
 
 .header-filter-container-filter {
     display: flex;
     gap: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
 }
 
 .recipes-preview {
     display: flex;
     flex-direction: column;
-    padding: 20px 20px 20px 20px;
+    padding: 20px;
     background-color: $backgroundColor;
-    height: 100vh;
 
     &__block-description {
         display: flex;
@@ -209,7 +258,9 @@ button:active {
 
     &__cards {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
+        padding-left: 20px;
+        padding-right: 20px;
         gap: 30px;
         flex-wrap: wrap;
     }
@@ -224,10 +275,11 @@ button:active {
             display: flex;
             justify-content: center;
             padding-top: 15px;
+            height: 500px;
         }
 
         &__img-container img{
-            width: 50%;
+            width: 70%;
         }
 
         &__description {
@@ -235,6 +287,14 @@ button:active {
             justify-content: center;
             padding-top: 40px;
             padding-bottom: 20px;
+
+            margin-top: 20px;
+
+            padding-left: 20px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            background-color: #161515;
+            border-radius: 20px;
 
 
             &__title {
@@ -248,29 +308,41 @@ button:active {
 
         &__cocking-time {
             display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding-bottom: 10px;
+            flex-direction: row;
+            gap: 20px;
 
-            &__preparation {
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+
+            background-color: #161515;
+            border-radius: 20px;
+
+            &__description {
                 display: flex;
-                align-items: center;
                 gap: 10px;
-                padding-left: 10px;
-                padding-right: 10px;
+                align-items: center;
+                justify-content: center;
+                width: 400px;
+                height: 100px;
 
-                &__title {
-                    color: rgb(255, 255, 255);
-                    font-size: 20px;
-                    font-weight: 400;
+                &__svg-quantity {
+                    height: 35%;
+
+                }
+
+                &__svg-time {
+                    width: 12%;
+
                 }
             }
 
-            &__preparation svg {
-                height: 50%;
-                width: auto;
+            &__title {
+                color: rgb(255, 255, 255);
+                font-size: 20px;
+                font-weight: 400;
             }
-            
+
         }
 
         &__author {
@@ -392,6 +464,30 @@ button:active {
         }
     }
 
+    &__pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 40px;
+
+        &__step-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+
+            color: rgb(255, 255, 255);
+            font-size: 40px;
+            font-weight: 400;
+        }
+
+        &__step-links a {
+            color:rgb(255, 255, 255);
+            padding-left: 10px;
+        }
+
+    }
+
 }
 
 .footer {
@@ -414,14 +510,28 @@ button:active {
 
 }
 
-//tablet version
 
-// @media screen and (max-width: 1160px) and (min-width: 767px) {
-//     @import 'adaptive_styles/tablet_styles';
-// }
+// fhd version 
+@media screen and (max-width: 1920px) and (min-width:1600px) {
+    @import './adaptive_styles/fhd_styles';
+}
 
-//mobile version
+// hd version
+@media screen and (max-width: 1600px) and (min-width:1200px) {
+    @import './adaptive_styles/hd_styles';
+}
 
-// @media screen and (max-width: 767px) and (min-width: 375px) {
-//     @import 'adaptive_styles/mobile_styles';
-// }
+// h version
+@media screen and (max-width: 1200px) and (min-width:768px) {
+    @import './adaptive_styles/h_styles';
+}
+
+// tablet big version
+@media screen and (max-width: 768px) and (min-width:480px) {
+    @import './adaptive_styles/tablet_big_styles';
+}
+
+// mobile version
+@media screen and (max-width: 480px) {
+    @import './adaptive_styles/_mobile_styles';
+}

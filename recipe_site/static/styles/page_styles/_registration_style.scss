@@ -4,23 +4,16 @@
 
 .registration {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     padding-top: 64px;
     padding-bottom: 96px;
 
     background: linear-gradient(to bottom left, $cardEndGradientBgColor, $cardStartGradientBgColor);
 
-    &__data {
-        display: flex;
-        flex-direction: column;
-        gap: 34px;
-        padding-left: 20px;
-    }
-
     &__personal-info {
         display: flex;
         flex-direction: column;
+        gap: 20px;
         text-align: center;
 
     }
@@ -38,19 +31,28 @@
         flex-direction: column;
         justify-content: center;
 
-        gap: 20px;
+        gap: 30px;
     }
 
     &__form label {
         color: white;
         font-size: 30px;
         font-weight: 300;
+        padding-bottom: 20px;
     }
 
     &__form ul {
         color: white;
         font-size: 15px;
         font-weight: 300;
+
+    }
+
+    &__form li {
+        display: flex;
+        justify-content: left;
+
+
     }
 
     &__form p {
@@ -59,9 +61,15 @@
     }
 
     &__form p  .helptext{
-        margin-left: 10px;
+
         color: white;
         flex-wrap: wrap;
+    }
+
+    &__form span {
+        display: flex;
+        justify-content: center;
+        padding-top: 10px;
     }
 
 
@@ -119,33 +127,4 @@
 
     }
 
-    &__advertising {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-right: 20px;
-        gap: 22px;
-    }
-
-    &__adv-title {
-        color: rgb(255, 255, 255);
-        font-size: 24px;
-        font-weight: 500;
-        text-align: center;
-
-    }
-
-    &__ul {
-        padding-left: 22px;
-        list-style-image: url(/img/registartion_img/ul_img.svg);
-    }
-
-    &__li {
-        color: rgb(255, 255, 255);
-        font-size: 24px;
-        font-weight: 400;
-
-        padding-bottom: 16px;
-        padding-left: 22px;
-    }
 }

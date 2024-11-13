@@ -9,14 +9,13 @@ from .views import (
     UserDeleteView,
     UserUpdateView,
     UserPasswordChangeView,
+    UserPasswordResetView,
+    UserPasswordResetDoneView,
+    UserPasswordResetConfirmView,
+    UserPasswordResetCompleteView
 
 )
-from django.contrib.auth.views import(
-PasswordResetDoneView, 
-PasswordResetView,
-PasswordResetConfirmView,
-PasswordResetCompleteView
-)
+
 
 
 urlpatterns = [
@@ -26,22 +25,11 @@ urlpatterns = [
     path('login/', MyLoginView.as_view(), name='login'),
     path('user/change-password/', UserPasswordChangeView.as_view(), name='password_change'),
 
-    path('password-reset/', PasswordResetView.as_view(
-        template_name='pages/password_reset_form.html',
-        email_template_name='pages/password_reset_email.html',
-        success_url=reverse_lazy("password_reset_done")
-        ), name='password_reset'),
+    path('password-reset/', UserPasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', UserPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password-reset/<uidb64>/<token>/', UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 
-    path('password-reset/done/', PasswordResetDoneView.as_view(template_name='pages/password_reset_done.html'), name='password_reset_done'),
-
-    path('password-reset/<uidb64>/<token>/', PasswordResetConfirmView.as_view(
-        template_name='pages/password_reset_confirm.html',
-        success_url=reverse_lazy("password_reset_complete")
-        ), name='password_reset_confirm'),
-
-    path('password-reset/complete/', PasswordResetCompleteView.as_view(
-        template_name='pages/password_reset_complete.html',
-        ), name='password_reset_complete'),
+    path('password-reset/complete/', UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     path('lk/<int:pk>/', LkView.as_view(), name='lk_page'),
     path('user-info/<int:pk>/', AboutUserView.as_view(), name='user_info'),

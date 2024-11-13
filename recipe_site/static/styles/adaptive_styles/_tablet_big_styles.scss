@@ -1,8 +1,8 @@
 //tablet css
 
 .center {
-    padding-left: calc(50% - $mobileResolution / 2);
-    padding-right: calc(50% - $mobileResolution / 2);
+    padding-left: calc(50% - $tabletBigResolution / 2);
+    padding-right: calc(50% - $tabletBigResolution / 2);
 } 
 
 .header-container__left__filter-description {
@@ -15,7 +15,6 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 40px;
-    padding-top: 20px;
 } 
 
 .header-container__left {
@@ -28,59 +27,29 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
-
-}
-
-.header-container__left__home-button {
-    padding: 10px;
-
-}
-
-.header-container__left__search-form__input-input {
-    padding: 10px;
-    font-size: 15px;
-}
-
-.header-container__left__search-form__filters-button{
-    padding: 10px;
 }
 
 .header-container__left__search-form__submit-button {
-    width: 100px;
-    padding: 10px;
+    width: 200px;
 }
 
 .header-container__right {
     flex-direction: column;
-    padding-right: 5px;
-    padding-left: 5px;
-    gap: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 .header-container__right__registration {
-    padding: 5px;
-    font-size: 15px;
+    padding: 15px;
 }
 
 .hd-r-r-l {
-    padding: 10px;
-    font-size: 15px;
     margin-left: 0;
 }
 
 .recipes-preview__block-description {
     text-align: center;
     gap: 20px;
-
-}
-
-.recipes-preview__block-description__title {
-    font-size: 15px;
-}
-
-.recipes-preview__block-description__subtitle {
-    font-size: 15px;
-
 }
 
 .recipes-preview__cards {
@@ -89,12 +58,6 @@
 
 .recipes-preview__card {
     width: 100%;
-    align-items: center;
-}
-
-.recipes-preview__card__img-container{
-    width: 200px;
-    height: 200px;
 }
 
 .recipes-preview__card__button-box {
@@ -104,91 +67,19 @@
 }
 
 .recipes-preview__pagination span{
-    font-size: 15px;
+    font-size: 25px;
 }
 
 .header-container__left__filter-description__parent__subtitle{
-    font-size: 15px;
-}
-
-.header-container__left__filter-description__children__content {
-    font-size: 15px;
-}
-
-.header-filter-container__button {
-    font-size: 15px;
-}
-
-.recipes-preview__card__description {
-    padding: 20px;
-    width: 255px;
-}
-
-.recipes-preview__card__description__title {
     font-size: 20px;
 }
 
-.recipes-preview__card__cocking-time__description {
-    width: 130px;
-    gap: 5px;
+.header-container__left__filter-description__children__content {
+    font-size: 20px;
 }
 
-.recipes-preview__card__cocking-time {
-    gap: 0px;
-}
-
-.recipes-preview__card__cocking-time__title {
-    font-size: 15px;
-    font-weight: 300;
-}
-
-.recipes-preview__card__cocking-time__description__svg-quantity {
-    height: 20%;
-}
-
-.recipes-preview__card__cocking-time__description__svg-time {
-    width: 20%;
-}
-
-.recipes-preview__card__author {
-    width: 255px;
-}
-
-.recipes-preview__card__author__title-span {
-    font-weight: 500;
-}
-
-.recipes-preview__card__nutritional-value {
-    width: 255px;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.recipes-preview__card__nutritional-value__description__title {
-    font-size: 15px;
-}
-
-.recipes-preview__card__nutritional-value__description__subtitle {
-    font-size: 15px;
-}
-
-.recipes-preview__card__nutritional-value__spoiler__title {
-    font-size: 15px;
-}
-
-.recipes-preview__card__short-description {
-    width: 255px;
-}
-
-.recipes-preview__card__short-description__title {
-    font-size: 15px;
-}
-
-.recipes-preview__card__button-box__button {
-    width: 255px;
-    font-size: 15px;
-    justify-content: center;
-    margin-bottom: 10px;
+.header-filter-container__button {
+    font-size: 20px;
 }
 
 .add-recipe__form__first-block__img {
@@ -199,27 +90,26 @@
     gap: 15px;
 }
 
-.add-recipe__form__first-block__img input {
-    font-size: 15px;
-    width: 200px;
-}
-
 .add-recipe__form__first-block__img a {
     text-align: center;
     word-break: break-all;
+}
+
+.add-recipe__form__first-block__img input {
+    font-size: 15px;
+    width: 200px;
 }
 
 .add-recipe__form {
     font-size: 20px;
     padding-left: 20px;
     padding-right: 20px;
-    width: 370px;
+    width: 479px;
 }
 
 .add-recipe__form__first-block {
     justify-content: center;
     align-items: center;
-    gap: 20px;
 }
 
 .add-recipe__form__second-block__categories {
@@ -230,7 +120,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    text-align: center;
 }
 
 .ingredient-form {
@@ -239,7 +128,6 @@
 
 .ingredient-form__content {
     gap: 8px;
-    flex-direction: column;
 }
 
 .ingredient-form__content-second {
@@ -268,7 +156,7 @@
 }
 
 .add-recipe__form__sixth-block__step-form textarea {
-    width: 280px;
+    width: 390px;
 }
 
 .add-recipe__form__sixth-block__delete-button {
@@ -294,7 +182,7 @@
 }
 
 .select2-selection__arrow {
-    right: -85px !important;
+    right: -55px !important;
 }
 
 .select2-dropdown--below {
@@ -318,16 +206,12 @@
     margin-bottom: 20px;
 }
 
-.footer__subtitle {
-    font-size: 15px;
-}
-
 .about-user__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .about-user__info {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .about-user__links {
@@ -336,12 +220,12 @@
 }
 
 .about-user__links a {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card {
-    padding-left: calc(50% - $mobileResolution / 3);
-    padding-right: calc(50% - $mobileResolution / 3); 
+    padding-left: calc(50% - $tabletBigResolution / 4);
+    padding-right: calc(50% - $tabletBigResolution / 4); 
 }
 
 .recipe__card__img-container img {
@@ -350,19 +234,19 @@
 }
 
 .recipe__card__description__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__cocking-time__preparation__title {
-    font-size: 19px;
+    font-size: 25px;
 }
 
 .recipe__card__author__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__author__title-span {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__nutritional-value__description-box {
@@ -372,63 +256,58 @@
 }
 
 .recipe__card__nutritional-value__description__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__nutritional-value__description__subtitle {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__nutritional-value__spoiler__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__ingridients__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__ingridients__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__ingridient-box {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__cooking-steps__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__cooking-steps__step__title {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card__cooking-steps__step__subtitle {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .recipe__card a {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .confirm-delete {
-    padding-left: calc(50% - $mobileResolution / 4);
-    padding-right: calc(50% - $mobileResolution / 4); 
+    padding-left: calc(50% - $tabletBigResolution / 4);
+    padding-right: calc(50% - $tabletBigResolution / 4); 
 }
 
 .confirm-delete__form {
     text-align: center;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .registration__data {
-    padding-left: calc(50% - $mobileResolution / 4);
-    padding-right: calc(50% - $mobileResolution / 4); 
-}
-
-.login-page__form__reset-link {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-left: calc(50% - $tabletBigResolution / 4);
+    padding-right: calc(50% - $tabletBigResolution / 4); 
 }
 
 .password-reset {
@@ -446,15 +325,8 @@
 }
 
 .password-reset-confirm {
-    padding-left: calc(50% - $mobileResolution / 4);
-    padding-right: calc(50% - $mobileResolution / 4); 
-    font-size: 20px;
-    text-align: center;
-}
-
-.password-reset-confirm__form__content input {
-    width: 170px;
-    padding: 0;
+    padding-left: calc(50% - $tabletBigResolution / 4);
+    padding-right: calc(50% - $tabletBigResolution / 4); 
 }
 
 .password-reset-complete__title {

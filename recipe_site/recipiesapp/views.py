@@ -53,6 +53,8 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
         context['step_formset'] = RecipeStepFormSet(self.request.POST or None)
         selected_categories = self.request.POST.getlist('categories') if self.request.method == 'POST' else []
         context['selected_categories'] = [int(category) for category in selected_categories]
+        context['categories'] = Category.objects.all()
+
         
         return context
 
@@ -79,7 +81,6 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
         )
 
         if form_valid and ingredient_valid and step_valid and ingredients_have_data and steps_have_text:
-            print("Valid")
             # Сохраняем рецепт
             self.object = form.save(commit=False)
             self.object.author = self.request.user
@@ -172,10 +173,29 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
                     self.object.cooking_time_text = f'{hour} час {minutes} мин'
             else:
                 self.object.cooking_time_text = f'{time} мин'
+
+            # time category set
             
+            if time < 15:
+                category = Category.objects.get(name='До 15 минут')
+                self.object.categories.add(category)
 
+            elif time < 30:
+                category = Category.objects.get(name='До 30 минут')
+                self.object.categories.add(category)
 
+            elif time < 45:
+                category = Category.objects.get(name='До 45 минут')
+                self.object.categories.add(category)
 
+            elif time < 60:
+                category = Category.objects.get(name='До часа')
+                self.object.categories.add(category)
+            
+            else:
+                category = Category.objects.get(name='Более часа')
+                self.object.categories.add(category)
+            
 
             self.object.recipe_calories = total_calories
             self.object.recipe_fats = total_fats
@@ -185,27 +205,26 @@ class AddRecipeView(LoginRequiredMixin, CreateView):
 
             return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
         else:
-            print("Not valid")
             # Добавляем ошибки, если нет заполненного ингредиента или шага
             if not ingredients_have_data:
                 ingredient_formset.non_form_errors().append("Необходимо добавить хотя бы один ингредиент.")
-                print("Error added: No ingredients found.")
+
             if not steps_have_text:
                 step_formset.non_form_errors().append("Необходимо добавить хотя бы один шаг рецепта.")
-                print("Error added: No steps found.")
+
 
             return self.form_invalid(form)
         
 
     def form_invalid(self, form):
         # Если форма рецепта не валидна, возвращаем ошибочный контекст
-        print('Сработала функция инвалид')
-        print("POST data:", self.request.POST)
+
+
 
         ingredient_formset = RecipeIngredientFormSet(self.request.POST)
         step_formset = RecipeStepFormSet(self.request.POST)
         selected_categories = self.request.POST.getlist('categories')
-        print(selected_categories)
+
 
 
         return self.render_to_response(
@@ -226,6 +245,7 @@ class RecipeView(TemplateView):
         context['recipe'] = recipe
         context['ingredients'] = RecipeIngredient.objects.filter(recipe=recipe)
         context['steps'] = RecipeStep.objects.filter(recipe=recipe)
+        context['categories'] = Category.objects.all()
         return context
 
 
@@ -237,6 +257,11 @@ class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
     # Позволяем редактировать только собствен данные        
         return self.request.user == self.get_object().author
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
 
 
 class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -278,13 +303,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             # Сохранение формсета после валидации и добавления id
             step_formset.save()
 
-
-
-            
-
-
-
-                       # Подсчет калорий для рецепта
+            # Подсчет калорий для рецепта
             total_calories = 0
             total_fats = 0
             total_carbohydrates = 0
@@ -345,10 +364,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 category = Category.objects.get(name='Более 800 ккал')
                 self.object.categories.add(category)
 
-
-
-            # time set
-            
+            # time category set
             time = form.cleaned_data.get('cooking_time')
             if time > 60:
                 hour = time // 60
@@ -360,6 +376,28 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             else:
                 self.object.cooking_time_text = f'{time} мин'
 
+            # time category set
+            
+            if time < 15:
+                category = Category.objects.get(name='До 15 минут')
+                self.object.categories.add(category)
+
+            elif time < 30:
+                category = Category.objects.get(name='До 30 минут')
+                self.object.categories.add(category)
+
+            elif time < 45:
+                category = Category.objects.get(name='До 45 минут')
+                self.object.categories.add(category)
+
+            elif time < 60:
+                category = Category.objects.get(name='До часа')
+                self.object.categories.add(category)
+            
+            else:
+                category = Category.objects.get(name='Более часа')
+                self.object.categories.add(category)
+
 
             self.object.recipe_calories = total_calories
             self.object.recipe_fats = total_fats
@@ -367,21 +405,12 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             self.object.recipe_proteins = total_proteins
             self.object.save()
 
-
-
             return redirect(reverse("recipe", kwargs={"pk": self.object.pk}))
         else:
-            # Логирование ошибок для отладки
-            print("Ошибки formset:")
-            for i, f in enumerate(ingredient_formset.forms):
-                print(f"Форма ингредиента {i}: ошибки: {f.errors}")
-                if 'id' in f.errors:
-                    print(f"Поле 'id' формы ингредиента {i}: значение = {f['id'].value()}")
 
             return self.render_to_response(
                 self.get_context_data(form=form, ingredient_formset=ingredient_formset, step_formset=step_formset)
             )
-
 
     def test_func(self):
         # Ограничение доступа только для автора рецепта
@@ -392,6 +421,7 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['ingredient_formset'] = RecipeIngredientFormSet(instance=self.object)  # Подключаем formset ингредиентов
         context['selected_categories'] = self.object.categories.values_list('id', flat=True)
         context['step_formset'] = RecipeStepFormSet(instance=self.object)
+        context['categories'] = Category.objects.all()
         return context
 
     def form_invalid(self, form):
@@ -417,4 +447,9 @@ class AddProductView(LoginRequiredMixin, CreateView):
     
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()  # Передаем все категории в контекст
+        return context
         

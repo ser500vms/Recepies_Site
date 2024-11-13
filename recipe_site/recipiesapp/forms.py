@@ -27,6 +27,14 @@ class RecipeForm(forms.ModelForm):
             'cooking_time', 
             'quantity_of_servings',
             ]
+        labels = {
+            'name': 'Название рецепта',
+            'image': 'Изображение',
+            'short_description': 'Краткое описание рецепта',
+            'categories': 'Выбирете категории',
+            'cooking_time': 'Время приготовления',
+            'quantity_of_servings': 'Количество порций',
+        }
 
 
 class RecipeIngredientForm(forms.ModelForm):
@@ -35,15 +43,23 @@ class RecipeIngredientForm(forms.ModelForm):
         model = RecipeIngredient
         fields = ['product', 'quantity', 'unit_of_measurement']
 
-    # def __init__(self, *args, **kargs):
-    #     super().__init__(self, *args, **kargs)
-    #     self.fields['product'].queryset = Product.objects.none()
+        labels = {
+            'product': 'Выберите продукт',
+            'quantity': 'Количество',
+            'unit_of_measurement': 'Еденица измерения',
+        }
+
+
 
 
 class RecipeStepForm(forms.ModelForm):
     class Meta:
         model = RecipeStep
         fields = ['text']
+
+        labels = {
+            'text': 'Шаг',
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -54,3 +70,4 @@ class ProductForm(forms.ModelForm):
         class Meta:
             model = Product
             fields = ['name', 'calories', 'fats', 'carbohydrates', 'proteins']
+

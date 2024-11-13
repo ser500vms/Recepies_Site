@@ -95,12 +95,20 @@
             <div class="recipe__card__ingridients">
 
 
-                <div class="recipe__card__ingridient" style="display: flex; flex-direction: column;">
+                <div class="recipe__card__ingridient">
                     {% for ingridient in ingredients %}
-                        <div>
-                            {{ forloop.counter }}. {{ ingridient.product }}
-                            {{ ingridient.quantity }}
-                            {{ ingridient.unit_of_measurement }}
+                        <div class="recipe__card__ingridient-box">
+                            <div>
+                                {{ forloop.counter }}. {{ ingridient.product }}                                
+                            </div>
+                            <div>
+                                {% if ingridient.unit_of_measurement == 'По вкусу' %}
+                                    {{ ingridient.unit_of_measurement }}
+                                {% else %}
+                                    {{ ingridient.quantity }}
+                                    {{ ingridient.unit_of_measurement }} 
+                                {% endif %}
+                            </div>
                         </div>
 
 
@@ -114,22 +122,27 @@
                 Шаги приготовления:
             </h2>
             <div class="recipe__card__cooking-steps">
-                </div>
                 {% for step in steps %}
                     <div class="recipe__card__cooking-steps__step">
                         <h2 class="recipe__card__cooking-steps__step__title">
                             Шаг {{ forloop.counter }}
                         </h2>
-                        <!-- <img src="/img/recipe/recipe-photo.jpg" alt=""> -->
                         <p class="recipe__card__cooking-steps__step__subtitle">
                             {{ step.text }}
                         </p>
                     </div>
                 {% endfor %}
             </div>
-            <a href="{% url 'lk_page' pk=user.pk %}">
-                Вернуться к рецептам
-            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'lk_page' pk=user.pk %}">
+                    Вернуться к рецептам
+                </a>
+                {% else %}
+                <a href="{% url 'home_page' %}">
+                    Вернуться к рецептам
+                </a>
+            {% endif %}
+
         </div>
     </section>
 
