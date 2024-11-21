@@ -93,7 +93,9 @@ class RecipeIngredient(models.Model):
     update_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.quantity} {self.get_unit_of_measurement_display()} {self.product.name} для {self.recipe.name}"
+        product_name = self.product.name if self.product else "Unknown Product"
+        recipe_name = self.recipe.name if self.recipe else "Unknown Recipe"
+        return f"{self.quantity} {self.get_unit_of_measurement_display()} {product_name} для {recipe_name}"
     
 
 class RecipeStep(models.Model):
